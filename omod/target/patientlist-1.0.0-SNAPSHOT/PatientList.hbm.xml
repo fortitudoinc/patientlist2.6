@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="org.openmrs.module.patientlist">
+  <class name="PatientListItem" table="patientlist">
+    <id column="id" name="id" type="int" unsaved-value="0">
+      <generator class="native"/>
+    </id>
+    <discriminator column="id" insert="false"/>
+    <property column="patient_id" name="patientId" not-null="true"/>
+    <property column="patient_call_date" name="patientCallDate" not-null="true" type="java.util.Date"/>
+    <property column="last_contact_attempt_date" name="lastContactAttemptDate" not-null="true" type="java.util.Date"/>
+    <property column="contact_attempts" name="contactAttempts" not-null="true"/>
+    <property column="has_been_called" name="hasBeenCalled" not-null="true"/>
+    <property column="person_id" name="drPersonId" not-null="true"/>
+    <property column="voided_reason" length="500" name="voidedReason" not-null="true" type="java.lang.String"/>
+  </class>
+</hibernate-mapping>

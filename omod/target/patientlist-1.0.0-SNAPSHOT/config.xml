@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<module configVersion="1.2">
+	
+	<!-- Base Module Properties -->
+	<id>patientlist</id>
+	<name>Patient List</name>
+	<version>1.0.0-SNAPSHOT</version>
+	<package>org.openmrs.module.patientlist</package>
+	<author>levine</author>
+	<description>
+			maintain patient list
+	</description>
+
+	<activator>org.openmrs.module.patientlist.PatientListItemActivator</activator>
+	
+	<!-- <updateURL>https://modules.openmrs.org/modules/download/patientlist/update.rdf</updateURL> -->
+	<!-- /Base Module Properties -->
+	
+	<require_version>1.11.6</require_version>
+
+	<require_modules>
+		<require_module version="${appframeworkVersion}">
+			org.openmrs.module.appframework
+		</require_module>
+		<require_module version="${uiframeworkVersion}">
+			org.openmrs.module.uiframework
+		</require_module>
+		<require_module version="${uicommonsModuleVersion}">
+			org.openmrs.module.uicommons
+		</require_module>
+		<require_module version="${appuiVersion}">
+			org.openmrs.module.appui
+		</require_module>
+	</require_modules>
+	
+	<!-- Extensions -->
+	<extension>
+		<point>org.openmrs.admin.list</point>
+		<class>org.openmrs.module.patientlist.extension.html.AdminList</class>
+	</extension>
+
+	<aware_of_modules>
+		<aware_of_module>org.openmrs.module.legacyui</aware_of_module>
+	</aware_of_modules>
+	
+	<advice>
+            <point>org.openmrs.api.PatientService</point>
+            <class>org.openmrs.module.patientlist.advice.PatientAfterSaveAdvice</class>
+        </advice>
+        
+        <advice>
+            <point>org.openmrs.api.VisitService</point>
+            <class>org.openmrs.module.patientlist.advice.PatientAfterEndVisitAdvice</class>
+        </advice>
+        
+        <globalProperty>
+		<property>patientlist.clerkrole</property>
+		<defaultValue></defaultValue>
+		<description>
+			This is the role for the clerk who receives calls from patients.
+		</description>
+	</globalProperty>
+        <globalProperty>
+		<property>patientlist.drrole</property>
+		<defaultValue></defaultValue>
+		<description>
+			This is the role for the physician who will call patients
+		</description>
+	</globalProperty>
+        <globalProperty>
+		<property>patientlist.adminrole</property>
+		<defaultValue></defaultValue>
+		<description>
+			This is the role for the admin managing the patient list
+		</description>
+	</globalProperty>
+	<!-- AOP
+	<advice>
+		<point>org.openmrs.api.FormService</point>
+		<class>org.openmrs.module.patientlist.advice.DuplicateFormAdvisor</class>
+	</advice>
+	 /AOP -->
+	
+	
+	<!-- Required Privileges 
+	<privilege>
+		<name>Form Entry</name>
+		<description>Allows user to access Form Entry pages/functions</description>
+	</privilege>
+	 /Required Privileges -->
+
+
+	<!-- Required Global Properties 
+	<globalProperty>
+		<property>patientlist.someProperty</property>
+		<defaultValue></defaultValue>
+		<description>
+			A description of the global property goes here.  The description
+			should explain enough for administrators to understand the purpose
+			and possible values for the global property.
+		</description>
+	</globalProperty>
+	/Required Global Properties -->
+	
+	<!--
+	<dwr>
+		<allow>
+			<create creator="new" javascript="DWRFormEntryService">
+				<param name="class" value="org.openmrs.module.patientlist.web.DWRFormEntryService"/>
+				<include method="enterForm"/>
+			</create>
+		</allow>
+
+            <signatures>
+                    <![CDATA[
+                    import org.openmrs.module.patientlist.web.DWRFormEntryService;
+                    DWRFormEntryService.enterForm(Integer patientId, Integer formId, boolean useEncounter, List<String> fields);
+                    ]]>
+            </signatures>	
+    </dwr>
+    -->
+	
+    <!-- Servlets -->
+    <!-- Accessed through the url /pageContext()/moduleServlet/<moduleId>/<servlet-name> 
+    <servlet>
+            <servlet-name>formDownload</servlet-name>
+            <servlet-class>org.openmrs.module.patientlist.web.FormDownloadServlet</servlet-class>
+    </servlet>
+    -->
+    <!-- /Servlets -->
+	
+    <mappingFiles>
+        PatientList.hbm.xml
+    </mappingFiles>
+	
+    <!-- Internationalization -->
+    <!-- All message codes should start with patientlist.* -->
+    <messages>
+        <lang>en</lang>
+        <file>messages.properties</file>
+    </messages>
+    <messages>
+        <lang>fr</lang>
+        <file>messages_fr.properties</file>
+    </messages>
+    <messages>
+        <lang>es</lang>
+        <file>messages_es.properties</file>
+    </messages>
+    <!-- /Internationalization -->
+	
+</module>
+

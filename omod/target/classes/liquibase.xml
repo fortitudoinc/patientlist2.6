@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+                  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+ 
+ 
+    <changeSet id="levinemessage-1" author="levine">
+        <sql>
+            drop table if exists patientlist;
+        </sql>
+    </changeSet>
+    <changeSet id="levinemessage-2" author="levine">
+        <preConditions onFail="WARN" onError="WARN">
+            <not>
+                <tableExists tableName="patientlist" />
+            </not>
+        </preConditions>
+        
+        <createTable tableName="patientlist">
+            <column name="id" type="int(11)" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="patient_id" type="int">
+                <constraints nullable="false" foreignKeyName="patient_id" references="patient(patient_id)" />
+            </column>
+            <column name="person_id" type="int">
+                <constraints nullable="false" foreignKeyName="person_id" references="person(person_id)" />
+            </column>
+            <column name="patient_call_date" type="datetime"></column>
+            <column name="last_contact_attempt_date" type="datetime"></column>
+            <column name="contact_attempts" type="int"></column>
+            <column name="has_been_called" type="TINYINT"></column>
+            <column name="voided_reason" type="varchar(255)"></column> 
+            
+        </createTable>
+    </changeSet>
+ 
+</databaseChangeLog>

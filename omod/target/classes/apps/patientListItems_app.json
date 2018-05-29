@@ -1,0 +1,33 @@
+[
+    {
+        "id": "${project.parent.artifactId}.app",
+        "description": "Text description of my app, not shown to regular user",
+        "extensionPoints": [
+            {
+                "id": "subApp.apps",
+                "description": "Apps on the basic Apps App Home Page"
+            }
+        ],
+        "extensions": [
+            {
+                "id": "${project.parent.artifactId}.appId3",
+                "extensionPointId": "org.openmrs.referenceapplication.homepageLink",
+                "type": "link",
+                "label": "Patient List",
+                "url": "patientlist/patientList.page",
+                "icon": "icon-signin",
+                "requiredPrivilege": "App: patient list"
+            },
+           {
+                "id": "${project.parent.artifactId}.appId4",
+                "extensionPointId": "org.openmrs.referenceapplication.homepageLink",
+                "type": "link",
+                "label": "Physician Payment Report",
+                "url": "module/reporting/dashboard/index.form",
+                "icon": "icon-signin",
+                "requiredPrivilege": "App: patient report"
+            }            
+
+        ]
+    }
+]
