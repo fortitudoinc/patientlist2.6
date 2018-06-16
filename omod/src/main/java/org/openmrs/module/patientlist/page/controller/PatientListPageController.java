@@ -35,7 +35,7 @@ public class PatientListPageController {
 	public void controller(HttpServletRequest request, PageModel model, HttpSession session) {
 		System.out.println("*******PatientListPageController");
 		
-		String url = (request.getRequestURL().toString()).trim();
+		String url = (request.getRequestURI()).trim();
 		int i = url.indexOf("coreapps");
 		if (i < 0) {
 			i = url.indexOf("patientlist");
