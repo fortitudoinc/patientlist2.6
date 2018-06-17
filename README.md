@@ -1,4 +1,6 @@
-Module: patientList
+# Module: patientList
+
+[![Build Status](https://travis-ci.org/fortitudoinc/patientlist2.6.svg?branch=master)](https://travis-ci.org/fortitudoinc/patientlist2.6)
 
 Privilege needed to run module: "App: patient list"
 
