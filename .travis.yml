@@ -1,0 +1,9 @@
+language: java
+script: mvn clean install
+deploy:
+  provider: releases
+  api_key:
+    secure: h5foYwnLSqMjDY1wBb+VtvVEhUa7vF+46UHw6shpaKmjTFTkqeiLhQmaprRe3VCDMrdSqhnqd8oqvjzTGScLY6pMDdqp/nFXWI6PyN9xKOVR29JfyuYo+XoOCwYj2DQeZ6ibIMNLtl2ux6VeO6c9aCAJldC+RrH1qIvgcAVMlpDe2RcpuwZlzYrASlbn8zGS1WsGFFeVFAhXWbGyeHfaT5jfcYuM+7puwxfA6LrE/eIeUKA+Y3S/fI+3qxC4yRcK9HFOVjYhq6+8P5FNKDQiAPeA75Kt1PXFBSmpCbCxLIk0T5M8wsI648iuj7/5m1rJvZ8eergXBHcenmJXQdofXFQko3QrHtgojucylLOfvdibeUVe61S+y6KvtDqJXRaQ/j8wvU0r9bAucXSSKCzTVfUUy14qIkmYJPKaIDJ/iyYyEL4IDhRF4WBPFhyjLQDWINSnuwLjOmyxwepLzqrXYT5JW9LbJVAKNWwHnXamrcm683+Y2BI+MIbXkGIaEI8w1stQFfW8r0KPXjgJBcYT6TKeZo30TZkhyVximNYlmFLWy8f2AJw/XKdaytDMjMsMtmm7pxmB5lB6Eves4aPV5qgUVx8I3YteSP31NI+n+Fsus1trnVqIlUA4nRC9bzExircC15Leo3rDcR9Y84zBp0IaK3Uu7qzMnwl07++wCeM=
+  file: omod/target/patientlist-1.0.0-SNAPSHOT
+  on:
+    repo: fortitudoinc/patientlist2.6
