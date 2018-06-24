@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.constraints.Null;
+
 import org.openmrs.Patient;
 import org.openmrs.Person;
 import org.openmrs.Role;
@@ -202,8 +204,23 @@ class PatientListItemLocal {
 		Person person = Context.getPersonService().getPerson(item.getPatientId());
 		//System.out.println(person.getFamilyName());
 		//patientPhone = "xxxxxx";
-		patientPhone = person.getAttribute("Telephone Number").getValue();
-		patientName = person.getGivenName() + " " + person.getFamilyName();
+		
+		try {
+			patientPhone = person.getAttribute("Telephone Number").getValue();
+		}
+		catch (NullPointerException e) {
+			System.out.println("[PATIENTLIST] Null Pointer trying to fetch patient phone, filling in with empty string");
+			patientPhone = "";
+		}
+		
+		try {
+			patientName = person.getGivenName() + " " + person.getFamilyName();
+		}
+		catch (NullPointerException e) {
+			System.out.println("[PATIENTLIST] Null pointer trying to fetch patient name, filling in with empty string");
+			patientName = "";
+		}
+		
 	}
 	
 	public int getId() {
