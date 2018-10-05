@@ -53,12 +53,12 @@
             <point>org.openmrs.api.VisitService</point>
             <class>org.openmrs.module.patientlist.advice.PatientAfterEndVisitAdvice</class>
         </advice>
-
+<!--
         <advice>
             <point>org.openmrs.api.ObsService</point>
             <class>org.openmrs.module.patientlist.advice.SendSMSLabsDrugsAdvice</class>
         </advice>       
-                    
+-->                    
         <advice>
             <point>org.openmrs.api.EncounterService</point>
             <class>org.openmrs.module.patientlist.advice.SendSMSLabsDrugsAdvice</class>

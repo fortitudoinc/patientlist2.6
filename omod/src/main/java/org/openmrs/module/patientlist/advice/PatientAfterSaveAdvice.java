@@ -6,6 +6,7 @@ package org.openmrs.module.patientlist.advice;
  */
 import java.lang.reflect.Method;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,9 +27,15 @@ public class PatientAfterSaveAdvice implements AfterReturningAdvice {
 		}
 		User user = Context.getAuthenticatedUser();
 		Patient patient = (Patient) args[0];
-		System.out.println("Saving new patient: " + patient.getFamilyName());
+		System.out.println("\n\nSaving new patient: " + patient.getFamilyName() + "  id: " + patient.getPatientId());
 		log.debug("Method: " + method.getName() + ". After advice called ");
+		/*
 		if (patient.getChangedBy() != null) {
+		System.out.println("Updating patient demographic data - not added to patient list");
+		return;
+		}
+		*/
+		if (isPatientInPatientList(patient.getPatientId())) {
 			System.out.println("Updating patient demographic data - not added to patient list");
 			return;
 		}
@@ -45,5 +52,18 @@ public class PatientAfterSaveAdvice implements AfterReturningAdvice {
 		patientListItem.setPatientId(patient.getPatientId());
 		PatientListItem item = Context.getService(PatientListItemService.class).savePatientListItem(patientListItem);
 		
+	}
+	
+	private boolean isPatientInPatientList(Integer patientId) {
+		List<PatientListItem> items = Context.getService(PatientListItemService.class).getAllPatientListItems();
+		if (items == null) {
+			return false;
+		}
+		for (PatientListItem item : items) {
+			if (item.getPatientId() == patientId) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

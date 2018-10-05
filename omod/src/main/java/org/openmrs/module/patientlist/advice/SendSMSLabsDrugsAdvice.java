@@ -58,6 +58,8 @@ public class SendSMSLabsDrugsAdvice implements MethodBeforeAdvice {
 				PersonAttribute att = obs.getPerson().getAttribute("Telephone Number");
 				if (att != null) {
 					String patientTelNo = att.getValue();
+					//strip off leading 0 and add country code
+					patientTelNo = "+234" + patientTelNo.substring(1);
 					System.out.println("Tel no: " + patientTelNo);
 				} else {
 					System.out.println("Tel no attribute is null");
@@ -68,7 +70,7 @@ public class SendSMSLabsDrugsAdvice implements MethodBeforeAdvice {
 		
 	}
 	/*    
-		@Override
+		@Override"
 		public void before(Method method, Object[] args, Object o) throws Throwable {
 			System.out.println("\n\n***************SendSMSLabsDrugsAdvice: " + method.getName());
 			if (!method.getName().equals("saveObs")) {
