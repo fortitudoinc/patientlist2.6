@@ -25,26 +25,26 @@ import org.springframework.aop.MethodBeforeAdvice;
  * @author levine
  */
 public class SendSMSLabsDrugsAdvice implements MethodBeforeAdvice {
-
-	private void sendAwsSms(String phoneNumber, String msg){
-
+	
+	private void sendAwsSms(String phoneNumber, String msg) {
+		
 		// Generate a random topic name to avoid collisions
 		byte[] b = new byte[20];
 		new Random().nextBytes(b);
 		String tmpTopicName = "physician-message-tmp-" + Hex.encodeHexString(b);
-
+		
 		// Initialize AWS client
 		AmazonSNSClient snsClient = new AmazonSNSClient();
 		snsClient.setRegion(Region.getRegion(Regions.US_EAST_1));
-
+		
 		// Create the topic
 		CreateTopicResult createTopicResult = snsClient.createTopic(new CreateTopicRequest(tmpTopicName));
 		snsClient.subscribe(createTopicResult.getTopicArn(), "SMS", phoneNumber);
 		snsClient.publish(createTopicResult.getTopicArn(), msg);
-
+		
 		// Cleanup
 		snsClient.deleteTopic(createTopicResult.getTopicArn());
-
+		
 	}
 	
 	/*
@@ -91,9 +91,8 @@ public class SendSMSLabsDrugsAdvice implements MethodBeforeAdvice {
 					patientTelNo = "+234" + patientTelNo.substring(1);
 					System.out.println("Tel no: " + patientTelNo);
 					System.out.println("********** SENDING SMS");
-					sendAwsSms(patientTelNo, obs.getValueText());
-
-
+					sendAwsSms(patientTelNo, encTypeName + ": " + obs.getValueText());
+					
 				} else {
 					System.out.println("Tel no attribute is null");
 				}
