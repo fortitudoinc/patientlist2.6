@@ -6,7 +6,15 @@
 package org.openmrs.module.patientlist.advice;
 
 import java.lang.reflect.Method;
+import java.util.Random;
 import java.util.Set;
+
+import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.sns.AmazonSNSClient;
+import com.amazonaws.services.sns.model.CreateTopicRequest;
+import com.amazonaws.services.sns.model.CreateTopicResult;
+import org.apache.commons.codec.binary.Hex;
 import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.PersonAttribute;
@@ -17,6 +25,27 @@ import org.springframework.aop.MethodBeforeAdvice;
  * @author levine
  */
 public class SendSMSLabsDrugsAdvice implements MethodBeforeAdvice {
+	
+	private void sendAwsSms(String phoneNumber, String msg) {
+		
+		// Generate a random topic name to avoid collisions
+		byte[] b = new byte[20];
+		new Random().nextBytes(b);
+		String tmpTopicName = "physician-message-tmp-" + Hex.encodeHexString(b);
+		
+		// Initialize AWS client
+		AmazonSNSClient snsClient = new AmazonSNSClient();
+		snsClient.setRegion(Region.getRegion(Regions.US_EAST_1));
+		
+		// Create the topic
+		CreateTopicResult createTopicResult = snsClient.createTopic(new CreateTopicRequest(tmpTopicName));
+		snsClient.subscribe(createTopicResult.getTopicArn(), "SMS", phoneNumber);
+		snsClient.publish(createTopicResult.getTopicArn(), msg);
+		
+		// Cleanup
+		snsClient.deleteTopic(createTopicResult.getTopicArn());
+		
+	}
 	
 	/*
 	Need to get encounter type so we only send SMS when it's either a drug or lab order
@@ -61,6 +90,9 @@ public class SendSMSLabsDrugsAdvice implements MethodBeforeAdvice {
 					//strip off leading 0 and add country code
 					patientTelNo = "+234" + patientTelNo.substring(1);
 					System.out.println("Tel no: " + patientTelNo);
+					System.out.println("********** SENDING SMS");
+					sendAwsSms(patientTelNo, encTypeName + ": " + obs.getValueText());
+					
 				} else {
 					System.out.println("Tel no attribute is null");
 				}
