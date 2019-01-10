@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.openmrs.module.patientlist.page.controller;
 
 import java.util.ArrayList;
@@ -36,84 +31,6 @@ public class PatientListPageController {
 	
 	public void controller(HttpServletRequest request, PageModel model, HttpSession session) {
 		System.out.println("*******PatientListPageController");
-		
-		String url = (request.getRequestURI()).trim();
-		int i = url.indexOf("coreapps");
-		if (i < 0) {
-			i = url.indexOf("patientlist");
-		}
-		url = url.substring(0, i);
-		i = url.lastIndexOf("/");
-		url = url.substring(0, i);
-		url = url + "/coreapps/clinicianfacing/patient.page?patientId=";
-		
-		String userRole = "";
-		ArrayList<String> globalPropertyRoles = new ArrayList<String>();
-		String clerk, dr, admin;
-		clerk = Context.getAdministrationService().getGlobalProperty("patientlist.clerkrole");
-		dr = Context.getAdministrationService().getGlobalProperty("patientlist.drrole");
-		admin = Context.getAdministrationService().getGlobalProperty("patientlist.adminrole");
-		globalPropertyRoles.add(clerk);
-		globalPropertyRoles.add(dr);
-		globalPropertyRoles.add(admin);
-		
-		User user = Context.getAuthenticatedUser();
-		Set<Role> userRoles = user.getAllRoles();
-		for (Role role : userRoles) {
-			String roleName = role.getName();
-			System.out.println("User Role: " + roleName);
-			if (globalPropertyRoles.contains(roleName)) {
-				userRole = roleName;
-				break;
-			}
-		}
-		System.out.println("USER ROLE: " + userRole);
-		
-		List<PatientListItem> oldItems = new ArrayList<PatientListItem>();
-		List<PatientListItem> activeItems = new ArrayList<PatientListItem>();
-		ArrayList<PatientListItemLocal> activePatientListItems = new ArrayList<PatientListItemLocal>();
-		ArrayList<PatientListItemLocal> oldPatientListItems = new ArrayList<PatientListItemLocal>();
-		
-		if ((userRole.equals(clerk)) || (userRole.equals(admin))) {
-			oldItems = Context.getService(PatientListItemService.class).getOldPatientListItems();
-			for (PatientListItem item : oldItems) {
-				oldPatientListItems.add(new PatientListItemLocal(item));
-			}
-			Collections.sort(oldPatientListItems, new Comparator<PatientListItemLocal>() {
-				
-				public int compare(PatientListItemLocal o1, PatientListItemLocal o2) {
-					return o1.getPatientCallDate().compareTo(o2.getPatientCallDate());
-				}
-			});
-			if (userRole.equals(clerk)) {
-				userRole = "clerk";
-			} else {
-				userRole = "admin";
-			}
-		} else {
-			userRole = "dr";
-		}
-		
-		/*
-		Note, when a clerk wishes to add an old patient to the active list she/he must
-		be sure the patient has not already been added to the active list; therefore,
-		we need to get the active list so the view can do the check
-		 */
-		activeItems = Context.getService(PatientListItemService.class).getActivePatientListItems();
-		for (PatientListItem item : activeItems) {
-			activePatientListItems.add(new PatientListItemLocal(item));
-			Collections.sort(activePatientListItems, new Comparator<PatientListItemLocal>() {
-				
-				public int compare(PatientListItemLocal o1, PatientListItemLocal o2) {
-					return o1.patientCallDate.compareTo(o2.patientCallDate);
-				}
-			});
-		}
-		
-		model.addAttribute("activePatientListItems", activePatientListItems);
-		model.addAttribute("oldPatientListItems", oldPatientListItems);
-		model.addAttribute("url", url);
-		model.addAttribute("role", userRole);
 		
 	}
 	
@@ -162,7 +79,6 @@ public class PatientListPageController {
 	
 	/*        
 	        void listExtensions(AppFrameworkService service) {
-
 	            List<Extension> extensions = service.getAllEnabledExtensions();
 	            for (Extension extension : extensions) {
 	                System.out.println("Extension: " + extension.getExtensionPointId());
@@ -170,7 +86,6 @@ public class PatientListPageController {
 	            }
 	            
 	        }
-
 	 */
 }
 
@@ -250,5 +165,4 @@ class PatientListItemLocal {
 	public String getVoidedReason() {
 		return voidedReason;
 	}
-	
 }

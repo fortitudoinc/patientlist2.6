@@ -1,4 +1,3 @@
-
 <% ui.decorateWith("appui", "standardEmrPage") 
 ui.includeJavascript("uicommons", "datatables/jquery.dataTables.min.js")
 ui.includeCss("uicommons", "datatables/dataTables_jui.css")
@@ -16,11 +15,13 @@ ui.includeCss("uicommons", "datatables/dataTables_jui.css")
    var breadcrumbs = [
 
        { icon: "icon-home", link: '/' + OPENMRS_CONTEXT_PATH + '/index.htm' },
-        { label: "View Patient List"}
+        { label: "Test Specialty"}
     ];
 </script>
 
-${ ui.includeFragment("patientlist", "patientListFrag") }
+
+${ ui.includeFragment("patientlist", "patntListFrag") }
+
 
 
 <script type="text/javascript">

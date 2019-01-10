@@ -26,7 +26,16 @@
                 "url": "module/reporting/dashboard/index.form",
                 "icon": "icon-signin",
                 "requiredPrivilege": "App: patient report"
-            }            
+            },
+          {
+                "id": "${project.parent.artifactId}.appId6",
+                "extensionPointId": "org.openmrs.referenceapplication.homepageLink",
+                "type": "link",
+                "label": "Add Specialty Type",
+                "url": "patientlist/addSpecialtyType.page",
+                "icon": "icon-signin",
+                "requiredPrivilege": "App: patient list"
+            }                
 
         ]
     }
