@@ -4,4 +4,4 @@ omod/target
 omod/patientlist-omod.iml
 api/target
 api/patientlist-api.iml
-*.DS_Store
+.DS_Store
