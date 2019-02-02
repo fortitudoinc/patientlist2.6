@@ -27,7 +27,8 @@ public class PatientAfterSaveAdvice implements AfterReturningAdvice {
 		}
 		User user = Context.getAuthenticatedUser();
 		Patient patient = (Patient) args[0];
-		System.out.println("\n\nSaving new patient: " + patient.getFamilyName() + "  id: " + patient.getPatientId());
+		System.out.println("\n\nSaving new patient: " + patient.getFamilyName() + "  id: " + patient.getPatientId()
+		        + " user person_id: " + user.getPerson().getPersonId());
 		log.debug("Method: " + method.getName() + ". After advice called ");
 		/*
 		if (patient.getChangedBy() != null) {
@@ -48,7 +49,9 @@ public class PatientAfterSaveAdvice implements AfterReturningAdvice {
 		patientListItem.setContactAttempts(0);
 		patientListItem.setHasBeenCalled(0);
 		patientListItem.setVoidedReason("not voidedd");
-		patientListItem.setDrPersonId(user.getPerson().getPersonId()); //needs a person id so default to clerk
+		patientListItem.setClerkPersonId(user.getPerson().getPersonId()); //needs a person id so default to clerk
+		patientListItem.setDrPersonId(user.getPerson().getPersonId());
+		System.out.println("DrPersonId: " + patientListItem.getDrPersonId());
 		patientListItem.setPatientId(patient.getPatientId());
 		PatientListItem item = Context.getService(PatientListItemService.class).savePatientListItem(patientListItem);
 		

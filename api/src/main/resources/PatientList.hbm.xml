@@ -12,6 +12,7 @@
         <property column="contact_attempts" name="contactAttempts" not-null="true"/>
         <property column="has_been_called" name="hasBeenCalled" not-null="true"/>
         <property column="person_id" name="drPersonId" not-null="true"/>
+        <property column="clerk_person_id" name="clerkPersonId" not-null="true"/>
         <property column="voided_reason" length="500" name="voidedReason" not-null="true" type="java.lang.String"/>
     </class>
     <class name="PatientSpecialtyNeededItem" table="patient_specialty_needed">

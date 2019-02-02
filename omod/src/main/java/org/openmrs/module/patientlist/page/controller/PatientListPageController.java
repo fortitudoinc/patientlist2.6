@@ -63,6 +63,7 @@ public class PatientListPageController {
 			patientListItem.setHasBeenCalled(0);
 			patientListItem.setVoidedReason("not voidedd");
 			patientListItem.setPatientId(patientId);
+			patientListItem.setClerkPersonId(user.getPerson().getPersonId());
 			patientListItem.setDrPersonId(user.getPerson().getPersonId()); //needs a person id so default to clerk
 		} else {
 			System.out.println("Unsuccessful attempt to call patient, item id: " + itemId);

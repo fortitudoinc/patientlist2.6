@@ -25,6 +25,8 @@ public class PatientListItem extends BaseOpenmrsData implements Serializable {
 	
 	private int drPersonId;
 	
+	private int clerkPersonId; // id of clerk who puts patient on patientlist
+	
 	private String voidedReason;
 	
 	public Date getLastContactAttemptDate() {
@@ -49,6 +51,14 @@ public class PatientListItem extends BaseOpenmrsData implements Serializable {
 	
 	public void setHasBeenCalled(int hasBeenCalled) {
 		this.hasBeenCalled = hasBeenCalled;
+	}
+	
+	public int getClerkPersonId() {
+		return clerkPersonId;
+	}
+	
+	public void setClerkPersonId(int clerkPersonId) {
+		this.clerkPersonId = clerkPersonId;
 	}
 	
 	public String getVoidedReason() {

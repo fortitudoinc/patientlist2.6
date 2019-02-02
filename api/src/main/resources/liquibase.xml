@@ -58,5 +58,17 @@
             <column name="date_created" type="datetime"></column> 
         </createTable>        
     </changeSet>
+    <changeSet id="levinemessage-5" author="levine">
+            <addColumn tableName="patientlist">
+               <column name="clerk_person_id" type="int"></column>                       
+           </addColumn>
+    </changeSet>
+       <changeSet id="levinemessage-6" author="levine">
+          <addForeignKeyConstraint baseColumnNames="clerk_person_id"
+            baseTableName="patientlist"
+            constraintName="fk_clerk_person_id"
+            referencedColumnNames="person_id"
+            referencedTableName="person"/>
+    </changeSet>
  
 </databaseChangeLog>
