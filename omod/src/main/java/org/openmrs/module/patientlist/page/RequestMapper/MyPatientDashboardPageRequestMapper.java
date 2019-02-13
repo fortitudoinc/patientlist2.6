@@ -52,15 +52,17 @@ public class MyPatientDashboardPageRequestMapper implements PageRequestMapper {
 		if (!isUserClerk) {
 			return false;
 		}
+		/*
 		//Clerk should not be able to view patient dashboard
 		if (request.getProviderName().equals("coreapps")) {
-			if (request.getPageName().equals("clinicianfacing/patient")) {
-				request.setProviderNameOverride("patientlist");
-				request.setPageNameOverride("patientList");
-				log.info(request.toString());
-				return true;
-			}
+		if (request.getPageName().equals("clinicianfacing/patient")) {
+		request.setProviderNameOverride("patientlist");
+		request.setPageNameOverride("patientList");
+		log.info(request.toString());
+		return true;
 		}
+		}
+		*/
 		// no override happened
 		return false;
 	}

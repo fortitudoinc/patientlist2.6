@@ -84,9 +84,13 @@ var rl = "${role}";
 <th>Patient Call Date</th>
 <th>Last Contact Attempt Date</th>
 <th>tel</th>
+<th>Dashboard</th>
+<!--
+
         <% if (role.equals("dr")) { %>
 <th>Dashboard</th>
         <% } %>
+-->
 </tr>
 </thead>
 <tbody >
@@ -117,11 +121,16 @@ var rl = "${role}";
 <td>${ ui.format(it.lastContactAttemptDate)}</td>
 <td>${ ui.format(it.patientPhone)}</td>
 
+<td>
+        <a href=$url$it.patientId>dashboard</a>
+</td>
+<!--
     <% if (role.equals("dr")) { %>
 <td>
         <a href=$url$it.patientId>dashboard</a>
 </td>
     <% } %>
+-->
 </tr>
     <% } %>
   <% } else { %>
@@ -133,10 +142,13 @@ var rl = "${role}";
     <td >&nbsp;</td>
     <td >&nbsp;</td>
     <td >&nbsp;</td>
+    <td >&nbsp;</td>
+
+<!--
 <% if (role.equals("dr")) { %>
     <td >&nbsp;</td>
     <% } %>
-
+-->
   </tr>
   <% } %>
 </tbody>
