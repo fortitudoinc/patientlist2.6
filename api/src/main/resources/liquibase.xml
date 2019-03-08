@@ -70,5 +70,19 @@
             referencedColumnNames="person_id"
             referencedTableName="person"/>
     </changeSet>
+        <changeSet id="levinemessage-7" author="levine">
+        <createTable tableName="doctor_requested_by_patient">
+            <column name="id" type="int(11)" autoIncrement="true"> 
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="doctor_id" type="int">
+                 <constraints nullable="false" foreignKeyName="doctor_requested_id" references="users(user_id)"/>
+            </column>
+            <column name="patient_id" type="int">
+                <constraints nullable="false" foreignKeyName="patient_id11" references="patient(patient_id)"/>
+            </column>
+            <column name="date_created" type="datetime"></column> 
+        </createTable>        
+    </changeSet>
  
 </databaseChangeLog>

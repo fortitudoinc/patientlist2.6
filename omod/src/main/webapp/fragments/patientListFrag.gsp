@@ -65,6 +65,20 @@ var rl = "${role}";
             alert('AJAX error ' + err);
         })    
     };
+    
+    function selectDoctor(docId,patientId) {
+        jq.getJSON('${ ui.actionLink("updateRequestedDoctor") }',
+            {
+              'docId':    docId,
+              'patientId': patientId,
+            })
+        .success(function(data) {
+        })
+        .error(function(xhr, status, err) {
+            alert('AJAX error ' + err);
+        })   
+    };
+
 </script>
 
 <div>
@@ -77,12 +91,13 @@ var rl = "${role}";
     <% if (role.equals("dr")) { %>
 <th>Call No Answer</th>
     <% } %>
-<th>specialty</th>
+<th>Specialty</th>
 
 <th>Patient Name</th>
 <th>Contact Attempts</th> 
 <th>Patient Call Date</th>
 <th>Last Contact Attempt Date</th>
+<th>Requested Doctor</th> 
 <th>tel</th>
 <th>Dashboard</th>
 <!--
@@ -119,6 +134,18 @@ var rl = "${role}";
 <td>${ ui.format(it.contactAttempts)}</td>
 <td>${ ui.format(it.patientCallDate)}</td>
 <td>${ ui.format(it.lastContactAttemptDate)}</td>
+<td>
+   <select onchange="selectDoctor(this.value,${it.patientId})">
+    <option value="1"> Select Doctor</option>
+    <% doctors.each { doc->%>
+<% if ( (it.doctorRequested != null) && (doc.id == it.doctorRequested.id)) { %>
+    <option selected value="${doc.id}">${doc.givenName + " " + doc.familyName}</option>
+     <% } else { %>
+     <option value="${doc.id}">${doc.givenName + " " + doc.familyName}</option>
+     <% } %>
+     <% } %>
+    </select>
+</td>
 <td>${ ui.format(it.patientPhone)}</td>
 
 <td>
