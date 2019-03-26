@@ -152,6 +152,9 @@ public class PatientListFragFragmentController {
 			for (Role role : userRoles) {
 				String roleName = role.getName();
 				if (roleName.equals(doctorRole)) {
+					if (user.getRetired()) {
+						break;
+					}
 					doctors.add(user);
 					if (user.getId() == doctorRequestedId) {
 						doctorRequested = user;

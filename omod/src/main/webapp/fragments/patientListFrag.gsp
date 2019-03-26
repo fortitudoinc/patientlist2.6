@@ -91,13 +91,13 @@ var rl = "${role}";
     <% if (role.equals("dr")) { %>
 <th>Call No Answer</th>
     <% } %>
+<th>Requested Doctor</th> 
 <th>Specialty</th>
 
 <th>Patient Name</th>
 <th>Contact Attempts</th> 
 <th>Patient Call Date</th>
 <th>Last Contact Attempt Date</th>
-<th>Requested Doctor</th> 
 <th>tel</th>
 <th>Dashboard</th>
 <!--
@@ -109,13 +109,30 @@ var rl = "${role}";
 </tr>
 </thead>
 <tbody >
-  <% if (activePatientListItems) { %>
+  <% if (activePatientListItems) { %>   
      <% activePatientListItems.each { %>
 <tr>
 <% if (role.equals("dr")) { %>
 <td style="cursor:pointer" onclick="addToCallAttempts($it.id)"> <i  class="icon-">&#xf0fe;</i></td>
     <% } %>
 
+<td>
+<% if (role.equals("dr")) { %>
+   <select onchange="selectDoctor(this.value,${it.patientId})" disabled>
+     <% } else { %>
+   <select onchange="selectDoctor(this.value,${it.patientId})">
+    <% } %>
+
+    <option value="1"> Any</option>
+    <% doctors.each { doc->%>
+<% if ( (it.doctorRequested != null) && (doc.id == it.doctorRequested.id)) { %>
+    <option selected value="${doc.id}">${doc.givenName + " " + doc.familyName}</option>
+     <% } else { %>
+     <option value="${doc.id}">${doc.givenName + " " + doc.familyName}</option>
+     <% } %>
+     <% } %>
+    </select>
+</td>
 <td>
    <select onchange="selectSpecialty(this.value,${it.patientId})">
     <% items.each { itt->%>
@@ -134,18 +151,7 @@ var rl = "${role}";
 <td>${ ui.format(it.contactAttempts)}</td>
 <td>${ ui.format(it.patientCallDate)}</td>
 <td>${ ui.format(it.lastContactAttemptDate)}</td>
-<td>
-   <select onchange="selectDoctor(this.value,${it.patientId})">
-    <option value="1"> Select Doctor</option>
-    <% doctors.each { doc->%>
-<% if ( (it.doctorRequested != null) && (doc.id == it.doctorRequested.id)) { %>
-    <option selected value="${doc.id}">${doc.givenName + " " + doc.familyName}</option>
-     <% } else { %>
-     <option value="${doc.id}">${doc.givenName + " " + doc.familyName}</option>
-     <% } %>
-     <% } %>
-    </select>
-</td>
+
 <td>${ ui.format(it.patientPhone)}</td>
 
 <td>
@@ -170,7 +176,7 @@ var rl = "${role}";
     <td >&nbsp;</td>
     <td >&nbsp;</td>
     <td >&nbsp;</td>
-
+    <td >&nbsp;</td>
 <!--
 <% if (role.equals("dr")) { %>
     <td >&nbsp;</td>
