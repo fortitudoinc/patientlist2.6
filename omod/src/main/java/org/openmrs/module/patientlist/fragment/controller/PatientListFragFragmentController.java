@@ -275,8 +275,8 @@ class PatientListItemLocal {
 	}
 	
 	public PatientListItemLocal(org.openmrs.module.patientlist.PatientListItem item, int specId, User doctorRequested) {
-		System.out.println("**********************Patient id: " + item.getPatientId() + " Spec id: " + specId
-		        + " Dr Requested: " + doctorRequested);
+		//System.out.println("**********************Patient id: " + item.getPatientId() + " Spec id: " + specId
+		//        + " Dr Requested: " + doctorRequested);
 		if (specId == 0) {
 			specItem = null;
 		} else {

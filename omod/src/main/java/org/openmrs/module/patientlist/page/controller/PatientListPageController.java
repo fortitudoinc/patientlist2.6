@@ -17,8 +17,12 @@ import org.openmrs.User;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.patientlist.PatientListItem;
+import org.openmrs.module.patientlist.PatientSpecialtyNeededItem;
+import org.openmrs.module.patientlist.SpecialtyTypeItem;
 import org.openmrs.ui.framework.page.PageModel;
 import org.openmrs.module.patientlist.api.PatientListItemService;
+import org.openmrs.module.patientlist.api.PatientSpecialtyNeededItemService;
+import org.openmrs.module.patientlist.api.SpecialtyTypeItemService;
 import org.openmrs.module.uicommons.util.InfoErrorMessageUtil;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -65,6 +69,25 @@ public class PatientListPageController {
 			patientListItem.setPatientId(patientId);
 			patientListItem.setClerkPersonId(user.getPerson().getPersonId());
 			patientListItem.setDrPersonId(user.getPerson().getPersonId()); //needs a person id so default to clerk
+			
+			PatientSpecialtyNeededItem specialtyItemNeeded = new PatientSpecialtyNeededItem();
+			specialtyItemNeeded.setDateCreated(new Date());
+			specialtyItemNeeded.setPatientId(patientId);
+			
+			PatientSpecialtyNeededItem mostCurrentSpecialtyNeeded = null;
+			List<PatientSpecialtyNeededItem> specialtiesNeeded = Context.getService(PatientSpecialtyNeededItemService.class)
+			        .getPatientSpecialtyNeededItemForPatient(patientId);
+			mostCurrentSpecialtyNeeded = specialtiesNeeded.get(0);
+			for (PatientSpecialtyNeededItem item : specialtiesNeeded) {
+				if (item.getDateCreated().after(mostCurrentSpecialtyNeeded.getDateCreated())) {
+					mostCurrentSpecialtyNeeded = item;
+				}
+			}
+			specialtyItemNeeded.setSpecialtyTypeId(mostCurrentSpecialtyNeeded.getSpecialtyTypeId());
+			System.out.println("*****Old patient with specialty added to list, specialty: "
+			        + specialtyItemNeeded.getSpecialtyTypeId());
+			
+			Context.getService(PatientSpecialtyNeededItemService.class).savePatientSpecialtyNeededItem(specialtyItemNeeded);
 		} else {
 			System.out.println("Unsuccessful attempt to call patient, item id: " + itemId);
 			patientListItem = Context.getService(PatientListItemService.class).getPatientListItem(itemId);
