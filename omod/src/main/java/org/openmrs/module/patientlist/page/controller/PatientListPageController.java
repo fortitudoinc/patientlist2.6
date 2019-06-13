@@ -77,16 +77,30 @@ public class PatientListPageController {
 			PatientSpecialtyNeededItem mostCurrentSpecialtyNeeded = null;
 			List<PatientSpecialtyNeededItem> specialtiesNeeded = Context.getService(PatientSpecialtyNeededItemService.class)
 			        .getPatientSpecialtyNeededItemForPatient(patientId);
-			mostCurrentSpecialtyNeeded = specialtiesNeeded.get(0);
-			for (PatientSpecialtyNeededItem item : specialtiesNeeded) {
-				if (item.getDateCreated().after(mostCurrentSpecialtyNeeded.getDateCreated())) {
-					mostCurrentSpecialtyNeeded = item;
+			if ((specialtiesNeeded == null) || (specialtiesNeeded.size() == 0)) {
+				// default to Medicine - this check is for patients
+				// who never used a specialty; handles cases before we added specialties
+				int medicineId;
+				List<SpecialtyTypeItem> specialties = Context.getService(SpecialtyTypeItemService.class)
+				        .getAllSpecialtyTypeItem();
+				for (SpecialtyTypeItem specItem : specialties) {
+					if (specItem.getName().equalsIgnoreCase("Medicine")) {
+						specialtyItemNeeded.setSpecialtyTypeId(specItem.getId());
+						break;
+					}
 				}
+				
+			} else {
+				mostCurrentSpecialtyNeeded = specialtiesNeeded.get(0);
+				for (PatientSpecialtyNeededItem item : specialtiesNeeded) {
+					if (item.getDateCreated().after(mostCurrentSpecialtyNeeded.getDateCreated())) {
+						mostCurrentSpecialtyNeeded = item;
+					}
+				}
+				specialtyItemNeeded.setSpecialtyTypeId(mostCurrentSpecialtyNeeded.getSpecialtyTypeId());
+				System.out.println("*****Old patient with specialty added to list, specialty: "
+				        + specialtyItemNeeded.getSpecialtyTypeId());
 			}
-			specialtyItemNeeded.setSpecialtyTypeId(mostCurrentSpecialtyNeeded.getSpecialtyTypeId());
-			System.out.println("*****Old patient with specialty added to list, specialty: "
-			        + specialtyItemNeeded.getSpecialtyTypeId());
-			
 			Context.getService(PatientSpecialtyNeededItemService.class).savePatientSpecialtyNeededItem(specialtyItemNeeded);
 		} else {
 			System.out.println("Unsuccessful attempt to call patient, item id: " + itemId);
