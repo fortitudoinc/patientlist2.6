@@ -32,7 +32,6 @@ public class AddSpecialtyTypePageController {
 	public String post(HttpSession session, HttpServletRequest request,
 	        @RequestParam(value = "specialtyTypeName", required = false) String specialtyTypeName) {
 		System.out.println("POST ------------ specialtyTypeName: " + specialtyTypeName);
-		
 		addSpecialty(session, specialtyTypeName);
 		return "redirect:" + "patientlist/addSpecialtyType.page";
 		

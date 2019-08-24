@@ -1,6 +1,6 @@
 [
     {
-        "id": "${project.parent.artifactId}.app",
+        "id": "${project.parent.artifactId}.patientlistapp",
         "description": "Text description of my app, not shown to regular user",
         "extensionPoints": [
             {
@@ -10,7 +10,7 @@
         ],
         "extensions": [
             {
-                "id": "${project.parent.artifactId}.appId3",
+                "id": "${project.parent.artifactId}.patientlisticon",
                 "extensionPointId": "org.openmrs.referenceapplication.homepageLink",
                 "type": "link",
                 "label": "Patient List",
@@ -19,7 +19,7 @@
                 "requiredPrivilege": "App: patient list"
             },
            {
-                "id": "${project.parent.artifactId}.appId4",
+                "id": "${project.parent.artifactId}.physicianpaymentreport",
                 "extensionPointId": "org.openmrs.referenceapplication.homepageLink",
                 "type": "link",
                 "label": "Physician Payment Report",
@@ -28,7 +28,7 @@
                 "requiredPrivilege": "App: patient report"
             },
           {
-                "id": "${project.parent.artifactId}.appId6",
+                "id": "${project.parent.artifactId}.addspecialty",
                 "extensionPointId": "org.openmrs.referenceapplication.homepageLink",
                 "type": "link",
                 "label": "Add Specialty Type",
