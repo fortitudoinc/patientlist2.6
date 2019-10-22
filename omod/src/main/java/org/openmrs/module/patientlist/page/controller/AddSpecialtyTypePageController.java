@@ -10,9 +10,13 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.appframework.domain.AppDescriptor;
+import org.openmrs.module.Extension;
+import org.openmrs.module.appframework.service.AppFrameworkService;
 import org.openmrs.module.patientlist.SpecialtyTypeItem;
 import org.openmrs.module.patientlist.api.SpecialtyTypeItemService;
 import org.openmrs.module.uicommons.util.InfoErrorMessageUtil;
+import org.openmrs.ui.framework.annotation.SpringBean;
 import org.openmrs.ui.framework.page.PageModel;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -21,12 +25,34 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 public class AddSpecialtyTypePageController {
 	
-	public void controller(HttpServletRequest request, PageModel model, HttpSession session) {
+	public void controller(HttpServletRequest request, PageModel model,
+	        @SpringBean("appFrameworkService") AppFrameworkService appFrameworkService, HttpSession session) {
 		System.out.println("*******AddSpecialtyTypePageController");
 		addInitialItems(session);
 		List<SpecialtyTypeItem> items;
 		items = Context.getService(SpecialtyTypeItemService.class).getAllSpecialtyTypeItem();
 		model.addAttribute("items", items);
+		
+		AppFrameworkService service = Context.getService(AppFrameworkService.class);
+		List<AppDescriptor> apps = service.getAllEnabledApps();
+		List<org.openmrs.module.appframework.domain.Extension> extensions = service.getAllEnabledExtensions();
+		System.out.println("APPS");
+		for (AppDescriptor appDesc : apps) {
+			System.out.println("APP: " + appDesc.getDescription() + " id: " + appDesc.getId());
+		}
+		for (org.openmrs.module.appframework.domain.Extension ext : extensions) {
+			System.out.println("EXT id: " + ext.getId() + " Label: " + ext.getLabel());
+		}
+		List<org.openmrs.module.appframework.domain.Extension> firstColumnFragments = appFrameworkService
+		        .getExtensionsForCurrentUser("patientDashboard.firstColumnFragments");
+		for (org.openmrs.module.appframework.domain.Extension ext : firstColumnFragments) {
+			System.out.println("FIRSTCOLUMNEXT id: " + ext.getId() + " Label: " + ext.getLabel());
+		}
+		List<org.openmrs.module.appframework.domain.Extension> includeFragments = appFrameworkService
+		        .getExtensionsForCurrentUser("patientDashboard.includeFragments");
+		for (org.openmrs.module.appframework.domain.Extension ext : includeFragments) {
+			System.out.println("includeFragmentsEXT id: " + ext.getId() + " Label: " + ext.getLabel());
+		}
 	}
 	
 	public String post(HttpSession session, HttpServletRequest request,

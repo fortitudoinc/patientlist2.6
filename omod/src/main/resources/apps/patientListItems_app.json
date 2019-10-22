@@ -35,7 +35,37 @@
                 "url": "patientlist/addSpecialtyType.page",
                 "icon": "icon-signin",
                 "requiredPrivilege": "App: patient list"
-            }                
+            },
+            {
+                "id": "${project.parent.artifactId}.pastMedicalHistory",
+                "extensionPointId": "patientDashboard.firstColumnFragments",
+                "extensionParams": {
+                    "fragment": "pastMedicalHistoryWidget"
+                },
+                "icon": "icon-diagnosis",
+                "order": 30,
+                "requiredPrivilege": "App: patient list"
+            },
+            {
+                "id": "${project.parent.artifactId}.medications",
+                "extensionPointId": "patientDashboard.secondColumnFragments",
+                "extensionParams": {
+                    "fragment": "medicationsWidget"
+                },
+                "icon": "icon-diagnosis",
+                "order": 30,
+                "requiredPrivilege": "App: patient list"
+            },
+            {
+                "id": "${project.parent.artifactId}.pastSurgicalHistory",
+                "extensionPointId": "patientDashboard.firstColumnFragments",
+                "extensionParams": {
+                    "fragment": "pastSurgicalHistoryWidget"
+                },
+                "icon": "icon-diagnosis",
+                "order": 30,
+                "requiredPrivilege": "App: patient list"
+            }                  
 
         ]
     }

@@ -9,9 +9,14 @@
  */
 package org.openmrs.module.patientlist;
 
+import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.BaseModuleActivator;
+import org.openmrs.module.Extension;
+import org.openmrs.module.appframework.domain.AppDescriptor;
+import org.openmrs.module.appframework.service.AppFrameworkService;
 
 /**
  * This class contains the logic that is run every time this module is either started or shutdown
@@ -25,6 +30,10 @@ public class PatientListItemActivator extends BaseModuleActivator {
 	 */
 	public void started() {
 		log.info("Started Patient List");
+		AppFrameworkService service = Context.getService(AppFrameworkService.class);
+		//service.disableExtension("referenceapplication.realTime.vitals");
+		//service.disableExtension("coreapps.mostRecentVitals.clinicianDashboardFirstColumn");
+		service.disableExtension("org.openmrs.module.coreapps.deletePatient");
 	}
 	
 	/**
