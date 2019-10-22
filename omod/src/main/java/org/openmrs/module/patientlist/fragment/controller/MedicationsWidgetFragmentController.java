@@ -15,6 +15,7 @@ import org.openmrs.Patient;
 import org.openmrs.Person;
 import org.openmrs.Visit;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.appframework.service.AppFrameworkService;
 import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.annotation.FragmentParam;
 import org.openmrs.ui.framework.fragment.FragmentModel;
@@ -23,14 +24,14 @@ import org.openmrs.ui.framework.page.PageModel;
 /**
  * @author levine
  */
-public class PastMedicalHistoryWidgetFragmentController {
+public class MedicationsWidgetFragmentController {
 	
 	public void controller(FragmentModel model, @FragmentParam("patientId") Patient patient, UiUtils ui,
 	        HttpServletRequest request, HttpSession session) {
 		int patientId = patient.getPatientId();
 		List<Visit> visits = Context.getVisitService().getActiveVisitsByPatient(patient);
 		String visitUUId = visits.get(0).getUuid();
-		String formUuid = Context.getAdministrationService().getGlobalProperty("patientlist.pastmedicalhistoryformUUID");
+		String formUuid = Context.getAdministrationService().getGlobalProperty("patientlist.medicationsformUUID");
 		String returnURL = request.getRequestURL() + "?patientId=" + patientId + "&";
 		returnURL = returnURL.substring(returnURL.indexOf(request.getContextPath()));
 		
@@ -44,9 +45,10 @@ public class PastMedicalHistoryWidgetFragmentController {
 		        + request.getPathInfo() + "\nrequest.getPathTranslated(): " + request.getPathTranslated()
 		        + "\nrequest.getProtocol(): " + request.getProtocol() + "\nrequest.getLocalPort(): "
 		        + request.getLocalPort());
-		System.out.println("\n\nLINK: " + link);
-		        
 		 */
+		
+		System.out.println("\n\n************************LINK: " + link);
+		
 		Person person = patient.getPerson();
 		Concept concept = Context.getConceptService().getConceptsByName("General patient note").get(0);
 		List<Obs> allObs = Context.getObsService().getObservationsByPersonAndConcept(person, concept);
@@ -54,8 +56,8 @@ public class PastMedicalHistoryWidgetFragmentController {
 		for (Obs obs : allObs) {
 			getLines(allHistory, obs.getValueText());
 		}
-		model.addAttribute("link", link);
-		model.addAttribute("allHistory", allHistory);
+		model.addAttribute("link11", link);
+		model.addAttribute("allHistory11", allHistory);
 	}
 	
 	void getLines(ArrayList<String> allHistory, String obsText) {

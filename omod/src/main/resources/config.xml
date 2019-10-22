@@ -85,6 +85,30 @@
 			This is the role for the admin managing the patient list
 		</description>
 	</globalProperty>
+        <globalProperty>
+		<property>patientlist.pastmedicalhistoryformUUID</property>
+		<defaultValue></defaultValue>
+		<description>
+			we need the past medical history form, copy uuid from
+                    manage forms/history form
+		</description>
+	</globalProperty>
+        <globalProperty>
+		<property>patientlist.pastsurgicalhistoryformUUID</property>
+		<defaultValue></defaultValue>
+		<description>
+			we need the past surgical history form, copy uuid from
+                    manage forms/history form
+		</description>
+	</globalProperty>
+        <globalProperty>
+		<property>patientlist.medicationsformUUID</property>
+		<defaultValue></defaultValue>
+		<description>
+			we need the past medications form, copy uuid from
+                    manage forms/history form
+		</description>
+	</globalProperty>                      
 	<!-- AOP
 	<advice>
 		<point>org.openmrs.api.FormService</point>
