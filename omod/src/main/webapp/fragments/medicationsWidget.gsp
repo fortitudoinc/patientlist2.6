@@ -6,9 +6,12 @@
 onclick="location.href='${link11}';"> </i>
     </div>
     <div class="info-body">
+   <% if (allHistory11) { %>   
      <% allHistory11.each { %>
 ${it}</br>
-     <% } %>
+     <% } } else { %>
+None
+    <% } %>
 
     </div>
 </div>

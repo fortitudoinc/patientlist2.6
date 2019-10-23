@@ -29,26 +29,32 @@ public class PastSurgicalHistoryWidgetFragmentController {
 	        HttpServletRequest request, HttpSession session) {
 		int patientId = patient.getPatientId();
 		List<Visit> visits = Context.getVisitService().getActiveVisitsByPatient(patient);
-		String visitUUId = visits.get(0).getUuid();
-		String formUuid = Context.getAdministrationService().getGlobalProperty("patientlist.pastsurgicalhistoryformUUID");
+		String link;
 		String returnURL = request.getRequestURL() + "?patientId=" + patientId + "&";
-		returnURL = returnURL.substring(returnURL.indexOf(request.getContextPath()));
-		
-		String link = request.getRequestURL().substring(0, request.getRequestURL().indexOf("coreapps"))
-		        + "htmlformentryui/htmlform/enterHtmlFormWithStandardUi.page?";
-		link += "patientId=" + patientId + "&visitId=" + visitUUId + "&formUuid=" + formUuid + "&returnUrl=" + returnURL;
-		/*
-		System.out.println("\nrequest.getRequestURI(): " + request.getRequestURI() + "\nrequest.getQueryString(): "
-		        + request.getQueryString() + "\nrequest.getRequestURL(): " + request.getRequestURL());
-		System.out.println("\nrequest.getContextPath(): " + request.getContextPath() + "\nrequest.getPathInfo(): "
-		        + request.getPathInfo() + "\nrequest.getPathTranslated(): " + request.getPathTranslated()
-		        + "\nrequest.getProtocol(): " + request.getProtocol() + "\nrequest.getLocalPort(): "
-		        + request.getLocalPort());
-		System.out.println("\n\nLINK: " + link);
-		        
-		 */
+		if (visits.size() == 0) {
+			link = returnURL;
+		} else {
+			String visitUUId = visits.get(0).getUuid();
+			String formUuid = Context.getAdministrationService()
+			        .getGlobalProperty("patientlist.pastsurgicalhistoryformUUID");
+			returnURL = returnURL.substring(returnURL.indexOf(request.getContextPath()));
+			
+			link = request.getRequestURL().substring(0, request.getRequestURL().indexOf("coreapps"))
+			        + "htmlformentryui/htmlform/enterHtmlFormWithStandardUi.page?";
+			link += "patientId=" + patientId + "&visitId=" + visitUUId + "&formUuid=" + formUuid + "&returnUrl=" + returnURL;
+			/*
+			System.out.println("\nrequest.getRequestURI(): " + request.getRequestURI() + "\nrequest.getQueryString(): "
+			        + request.getQueryString() + "\nrequest.getRequestURL(): " + request.getRequestURL());
+			System.out.println("\nrequest.getContextPath(): " + request.getContextPath() + "\nrequest.getPathInfo(): "
+			        + request.getPathInfo() + "\nrequest.getPathTranslated(): " + request.getPathTranslated()
+			        + "\nrequest.getProtocol(): " + request.getProtocol() + "\nrequest.getLocalPort(): "
+			        + request.getLocalPort());
+			System.out.println("\n\nLINK: " + link);
+			        
+			 */
+		}
 		Person person = patient.getPerson();
-		Concept concept = Context.getConceptService().getConceptsByName("General patient note").get(0);
+		Concept concept = Context.getConceptService().getConceptsByName("pastSurgicalHistory").get(0);
 		List<Obs> allObs = Context.getObsService().getObservationsByPersonAndConcept(person, concept);
 		ArrayList<String> allHistory = new ArrayList<String>();
 		for (Obs obs : allObs) {
