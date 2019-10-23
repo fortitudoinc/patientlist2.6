@@ -37,21 +37,22 @@ public class PastMedicalHistoryWidgetFragmentController {
 			String visitUUId = visits.get(0).getUuid();
 			String formUuid = Context.getAdministrationService().getGlobalProperty("patientlist.pastmedicalhistoryformUUID");
 			returnURL = returnURL.substring(returnURL.indexOf(request.getContextPath()));
-			
+			if (returnURL.indexOf("openmrs-standalone") < 0) {
+				returnURL = returnURL.substring(1); //remove the leading slash
+			}
+			returnURL = request.getRequestURL() + "?" + request.getQueryString();
 			link = request.getRequestURL().substring(0, request.getRequestURL().indexOf("coreapps"))
 			        + "htmlformentryui/htmlform/enterHtmlFormWithStandardUi.page?";
 			link += "patientId=" + patientId + "&visitId=" + visitUUId + "&formUuid=" + formUuid + "&returnUrl=" + returnURL;
-			/*
 			System.out.println("\nrequest.getRequestURI(): " + request.getRequestURI() + "\nrequest.getQueryString(): "
 			        + request.getQueryString() + "\nrequest.getRequestURL(): " + request.getRequestURL());
 			System.out.println("\nrequest.getContextPath(): " + request.getContextPath() + "\nrequest.getPathInfo(): "
 			        + request.getPathInfo() + "\nrequest.getPathTranslated(): " + request.getPathTranslated()
 			        + "\nrequest.getProtocol(): " + request.getProtocol() + "\nrequest.getLocalPort(): "
 			        + request.getLocalPort());
-			System.out.println("\n\nLINK: " + link);
-			        
-			 */
 		}
+		System.out.println("\n\nLINK: " + link);
+		
 		Person person = patient.getPerson();
 		Concept concept = Context.getConceptService().getConceptByName("pastMedicalHistory");
 		List<Obs> allObs = Context.getObsService().getObservationsByPersonAndConcept(person, concept);

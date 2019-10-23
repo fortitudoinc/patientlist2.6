@@ -38,6 +38,7 @@ public class PastSurgicalHistoryWidgetFragmentController {
 			String formUuid = Context.getAdministrationService()
 			        .getGlobalProperty("patientlist.pastsurgicalhistoryformUUID");
 			returnURL = returnURL.substring(returnURL.indexOf(request.getContextPath()));
+			returnURL = request.getRequestURL() + "?" + request.getQueryString();
 			
 			link = request.getRequestURL().substring(0, request.getRequestURL().indexOf("coreapps"))
 			        + "htmlformentryui/htmlform/enterHtmlFormWithStandardUi.page?";
@@ -53,6 +54,8 @@ public class PastSurgicalHistoryWidgetFragmentController {
 			        
 			 */
 		}
+		System.out.println("\n\nLINK: " + link);
+		
 		Person person = patient.getPerson();
 		Concept concept = Context.getConceptService().getConceptByName("pastSurgicalHistory");
 		List<Obs> allObs = Context.getObsService().getObservationsByPersonAndConcept(person, concept);
