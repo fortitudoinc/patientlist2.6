@@ -54,7 +54,7 @@ public class PastSurgicalHistoryWidgetFragmentController {
 			 */
 		}
 		Person person = patient.getPerson();
-		Concept concept = Context.getConceptService().getConceptsByName("pastSurgicalHistory").get(0);
+		Concept concept = Context.getConceptService().getConceptByName("pastSurgicalHistory");
 		List<Obs> allObs = Context.getObsService().getObservationsByPersonAndConcept(person, concept);
 		ArrayList<String> allHistory = new ArrayList<String>();
 		for (Obs obs : allObs) {

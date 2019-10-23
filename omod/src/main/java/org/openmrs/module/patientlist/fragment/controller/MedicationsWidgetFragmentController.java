@@ -55,7 +55,7 @@ public class MedicationsWidgetFragmentController {
 		}
 		
 		Person person = patient.getPerson();
-		Concept concept = Context.getConceptService().getConceptsByName("pastMedications").get(0);
+		Concept concept = Context.getConceptService().getConceptByName("pastMedications");
 		List<Obs> allObs = Context.getObsService().getObservationsByPersonAndConcept(person, concept);
 		ArrayList<String> allHistory = new ArrayList<String>();
 		for (Obs obs : allObs) {
