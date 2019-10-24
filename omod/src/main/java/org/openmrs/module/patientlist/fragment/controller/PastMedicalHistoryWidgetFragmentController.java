@@ -71,13 +71,22 @@ public class PastMedicalHistoryWidgetFragmentController {
 		for (int i = 0; i < obsText.length(); i++) {
 			nextChar = obsText.charAt(i);
 			if ((nextChar == lf) || (nextChar == cr)) {
+				nextLine = nextLine.trim();
 				allHistory.add(nextLine);
 				nextLine = "";
-				i++; //skip second of cr/lf pair
+				if ((i + 1 < obsText.length())) {
+					nextChar = obsText.charAt(i + 1);
+					if ((nextChar == lf) || (nextChar == cr)) {
+						i++; //skip second of cr/lf pair
+					}
+				}
 			} else {
 				nextLine += Character.valueOf(nextChar);
 			}
 		}
-		allHistory.add(nextLine);
+		nextLine = nextLine.trim();
+		if (nextLine.length() > 0) {
+			allHistory.add(nextLine);
+		}
 	}
 }

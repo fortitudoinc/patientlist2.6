@@ -34,6 +34,8 @@ public class PatientListItemActivator extends BaseModuleActivator {
 		//service.disableExtension("referenceapplication.realTime.vitals");
 		//service.disableExtension("coreapps.mostRecentVitals.clinicianDashboardFirstColumn");
 		service.disableExtension("org.openmrs.module.coreapps.deletePatient");
+		service.disableExtension("org.openmrs.module.coreapps.markPatientDead");
+		
 	}
 	
 	/**
