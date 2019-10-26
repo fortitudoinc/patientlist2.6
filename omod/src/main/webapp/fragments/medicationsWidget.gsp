@@ -6,14 +6,15 @@
 onclick="location.href='${link11}';"> </i>
     </div>
     <div class="info-body">
-<h2>Medication History</h2>
+<h2><font size="4">Medication History</font></h2>
    <% if (pastMedsHistory) { %>   
      <% pastMedsHistory.each { %>
 ${it}</br>
      <% } } else { %>
 None
     <% } %>
-<h2>Fortitudo Drug Orders</h2>
+
+<h2><font size="4">Fortitudo Drug Orders</font></h2>
    <% if (drugOrders) { %>   
      <% drugOrders.each { %>
 ${it}</br>

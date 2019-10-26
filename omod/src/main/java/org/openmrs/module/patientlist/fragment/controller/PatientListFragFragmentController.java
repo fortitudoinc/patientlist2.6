@@ -76,7 +76,7 @@ public class PatientListFragFragmentController {
 			Collections.sort(oldPatientListItems, new Comparator<PatientListItemLocal>() {
 				
 				public int compare(PatientListItemLocal o1, PatientListItemLocal o2) {
-					return o1.getPatientCallDate().compareTo(o2.getPatientCallDate());
+					return o2.getLastContactAttemptDate().compareTo(o1.getLastContactAttemptDate());
 				}
 			});
 			if (userRole.equals(clerkRole)) {
