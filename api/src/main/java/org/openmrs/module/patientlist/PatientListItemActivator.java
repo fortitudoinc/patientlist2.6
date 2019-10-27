@@ -31,10 +31,21 @@ public class PatientListItemActivator extends BaseModuleActivator {
 	public void started() {
 		log.info("Started Patient List");
 		AppFrameworkService service = Context.getService(AppFrameworkService.class);
-		//service.disableExtension("referenceapplication.realTime.vitals");
-		//service.disableExtension("coreapps.mostRecentVitals.clinicianDashboardFirstColumn");
+		service.disableExtension("referenceapplication.realTime.vitals");
+		service.disableExtension("org.openmrs.module.coreapps.mostRecentVitals.clinicianDashboardSecondColumn");
+		service.disableExtension("coreapps.mostRecentVitals.clinicianDashboardFirstColumn");
 		service.disableExtension("org.openmrs.module.coreapps.deletePatient");
 		service.disableExtension("org.openmrs.module.coreapps.markPatientDead");
+		
+		service.disableExtension("appointmentschedulingui.tab");
+		service.disableExtension("org.openmrs.module.appointmentschedulingui.firstColumnFragments.patientDashboard.patientAppointments");
+		service.disableExtension("appointmentschedulingui.homeAppLink");
+		service.disableExtension("appointmentschedulingui.schedulingAppointmentDashboardLink");
+		service.disableExtension("appointmentschedulingui.requestAppointmentDashboardLink");
+		service.disableExtension("referenceapplication.realTime.simpleAdmission");
+		service.disableExtension("referenceapplication.realTime.simpleDischarge");
+		service.disableExtension("referenceapplication.realTime.simpleTransfer");
+		service.disableExtension("org.openmrs.module.appointmentschedulingui.firstColumnFragments.patientDashboard.patientAppointments");
 		
 	}
 	

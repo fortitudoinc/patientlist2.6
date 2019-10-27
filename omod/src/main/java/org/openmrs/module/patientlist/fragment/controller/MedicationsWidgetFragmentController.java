@@ -55,6 +55,10 @@ public class MedicationsWidgetFragmentController {
 			        
 			 */
 		}
+		if (link.contains(":443/")) {
+			link = link.replaceAll("http:", "https:");
+			link = link.replaceAll(":443", "");
+		}
 		System.out.println("\n\nLINK: " + link);
 		
 		Person person = patient.getPerson();
