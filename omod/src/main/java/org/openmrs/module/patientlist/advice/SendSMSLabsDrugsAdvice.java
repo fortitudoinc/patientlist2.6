@@ -91,7 +91,14 @@ public class SendSMSLabsDrugsAdvice implements MethodBeforeAdvice {
 					patientTelNo = "+234" + patientTelNo.substring(1);
 					System.out.println("Tel no: " + patientTelNo);
 					System.out.println("********** SENDING SMS");
-					sendAwsSms(patientTelNo, encTypeName + ": " + obs.getValueText());
+					
+					try {
+						sendAwsSms(patientTelNo, encTypeName + ": " + obs.getValueText());
+					}
+					catch (Exception e) {
+						System.out.println("There was an error sending the sms message:");
+						e.printStackTrace();
+					}
 					
 				} else {
 					System.out.println("Tel no attribute is null");
