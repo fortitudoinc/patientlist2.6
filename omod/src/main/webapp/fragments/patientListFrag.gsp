@@ -5,6 +5,7 @@ jq(function() {
     document.getElementById('redirectURL').value = OPENMRS_CONTEXT_PATH + "/patientlist/patientList.page";
 var x = OPENMRS_CONTEXT_PATH + "/patientlist/patientList.page";
 var rl = "${role}";
+if (${numActive} > 0 ) {
      jq('#activeTable').dataTable({
             "aaSorting": [],
             "sPaginationType": "full_numbers",
@@ -14,6 +15,7 @@ var rl = "${role}";
             "bSort": true,
             "bJQueryUI": true
         });
+};
 
      jq('#oldTable').dataTable({
             "aaSorting": [],

@@ -17,6 +17,8 @@ import org.openmrs.Person;
 import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.appframework.domain.Extension;
+import org.openmrs.module.appframework.service.AppFrameworkService;
 import org.openmrs.module.patientlist.DoctorRequestedByPatient;
 import org.openmrs.module.patientlist.PatientListItem;
 import org.openmrs.module.patientlist.PatientSpecialtyNeededItem;
@@ -27,7 +29,7 @@ import org.openmrs.module.patientlist.api.PatientSpecialtyNeededItemService;
 import org.openmrs.module.patientlist.api.SpecialtyTypeItemService;
 import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.ui.framework.UiUtils;
-import org.openmrs.ui.framework.page.PageModel;
+import org.openmrs.ui.framework.fragment.FragmentModel;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
@@ -35,7 +37,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 public class PatientListFragFragmentController {
 	
-	public void controller(HttpServletRequest request, PageModel model, HttpSession session) {
+	public void controller(HttpServletRequest request, FragmentModel model, HttpSession session) {
 		System.out.println("*******PatientListFragFragmentController");
 		
 		List<SpecialtyTypeItem> items;
@@ -125,7 +127,7 @@ public class PatientListFragFragmentController {
 		model.addAttribute("role", userRole);
 		model.addAttribute("items", items);
 		model.addAttribute("doctors", doctors);
-		
+		model.addAttribute("numActive", activePatientListItems.size());
 	}
 	
 	private String getURL(HttpServletRequest request) {

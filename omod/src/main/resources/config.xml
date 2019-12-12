@@ -44,11 +44,17 @@
 		<aware_of_module>org.openmrs.module.legacyui</aware_of_module>
 	</aware_of_modules>
 	
+        <!--
 	<advice>
             <point>org.openmrs.api.PatientService</point>
             <class>org.openmrs.module.patientlist.advice.PatientAfterSaveAdvice</class>
         </advice>
-        
+        -->
+	<advice>
+            <point>org.openmrs.api.PatientService</point>
+            <class>org.openmrs.module.patientlist.advice.PatientAroundSaveAdvise</class>
+        </advice>
+                        
         <advice>
             <point>org.openmrs.api.VisitService</point>
             <class>org.openmrs.module.patientlist.advice.PatientStartingVisitAdvise</class>

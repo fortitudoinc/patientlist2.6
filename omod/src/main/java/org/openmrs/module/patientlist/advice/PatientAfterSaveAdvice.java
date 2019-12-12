@@ -23,6 +23,9 @@ import org.openmrs.module.patientlist.api.SpecialtyTypeItemService;
 
 public class PatientAfterSaveAdvice implements AfterReturningAdvice {
 	
+	/*
+	THIS IS OLD - IT WILL NOT BE INVOKED SINCE IT'S NOT MENTIONED IN THE CONFIG.XML FILE
+	*/
 	private Log log = LogFactory.getLog(this.getClass());
 	
 	public void afterReturning(Object returnValue, Method method, Object[] args, Object target) throws Throwable {
@@ -40,6 +43,13 @@ public class PatientAfterSaveAdvice implements AfterReturningAdvice {
 		return;
 		}
 		 */
+		/*
+		Patient oldPatient = getOldPatientIdOfSamePatient(patient);
+		if (oldPatient != null) {
+		    voidNewPatient(patient, user);
+		    patient = oldPatient;
+		}
+		*/
 		if (isPatientInPatientList(patient.getPatientId())) {
 			System.out.println("Updating patient demographic data - not added to patient list");
 			return;
@@ -89,5 +99,35 @@ public class PatientAfterSaveAdvice implements AfterReturningAdvice {
 			}
 		}
 		return false;
+	}
+	
+	private Patient getOldPatientIdOfSamePatient(Patient patient) {
+		if (patient.getVoided() == Boolean.TRUE) {
+			return patient;
+		}
+		List<Patient> patients = Context.getPatientService().getAllPatients();
+		System.out.println("PatientAfterSaveAdvice: " + patient.getGivenName() + " " + patient.getFamilyName() + " "
+		        + patient.getGender() + " " + patient.getAge() + " " + patient.getAttribute("Telephone Number").getValue());
+		for (Patient oldPatient : patients) {
+			if (oldPatient.getPatientId() == patient.getPatientId()) { // don't check patient against her/himself; just updating demographic data
+				continue;
+			}
+			if ((oldPatient.getGender().equals(patient.getGender()))
+			        && (oldPatient.getAge() == patient.getAge())
+			        && (oldPatient.getGivenName().equals(patient.getGivenName()))
+			        && (oldPatient.getFamilyName().equals(patient.getFamilyName()))
+			        && (oldPatient.getAttribute("Telephone Number").getValue().equals(patient.getAttribute(
+			            "Telephone Number").getValue()))) {
+				System.out.println("PATIENT MATCH!!!!");
+				return oldPatient;
+			}
+		}
+		return null;
+	}
+	
+	private void voidNewPatient(Patient patient, User user) {
+		patient.setVoided(Boolean.TRUE);
+		patient.setVoidedBy(user);
+		patient.setVoidReason("Patient is already registered");
 	}
 }
