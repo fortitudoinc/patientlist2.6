@@ -74,7 +74,8 @@ public class PatientAroundSaveAdvise extends StaticMethodMatcherPointcutAdvisor 
 			}
 			// the proceed() method does not have to be called
 			Patient newPatient = (Patient) invocation.proceed();
-			System.out.println("AFTER SAVE - ADDING NEW PATIENT TO PATIENTLIST o: " + o.getClass());
+			System.out.println("AFTER SAVE - ADDING NEW PATIENT TO PATIENTLIST: " + newPatient.getGivenName() + " "
+			        + newPatient.getFamilyName());
 			
 			addPatientToActiveList(patient);
 			log.debug("After " + invocation.getMethod().getName() + ".");
@@ -102,8 +103,8 @@ public class PatientAroundSaveAdvise extends StaticMethodMatcherPointcutAdvisor 
 		
 		private boolean isPatientAlreadyRegistered(Patient patient) {
 			List<Patient> patients = Context.getPatientService().getAllPatients();
-			System.out.println("patientAlreadyRegistered: " + patient.getGivenName() + " " + patient.getFamilyName() + " "
-			        + patient.getGender() + " " + patient.getAge() + " "
+			System.out.println("in method patientAlreadyRegistered: " + patient.getGivenName() + " "
+			        + patient.getFamilyName() + " " + patient.getGender() + " " + patient.getAge() + " "
 			        + patient.getAttribute("Telephone Number").getValue());
 			for (Patient oldPat : patients) {
 				if ((oldPat.getGender().equals(patient.getGender()))
