@@ -2,21 +2,19 @@ package org.openmrs.module.patientlist.web.controller;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.openmrs.Patient;
-import org.openmrs.User;
+import org.openmrs.Person;
+import org.openmrs.PersonAttribute;
+import org.openmrs.PersonAttributeType;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.patientlist.DoctorRequestedByPatient;
-import org.openmrs.module.patientlist.DoctorRequestedShort;
 import org.openmrs.module.patientlist.PatientListItem;
 import org.openmrs.module.patientlist.PatientListItemShort;
-import org.openmrs.module.patientlist.PatientSpecialtyNeededItem;
-import org.openmrs.module.patientlist.PatientSpecialtyNeededShort;
-import org.openmrs.module.patientlist.SpecialtyTypeItem;
-import org.openmrs.module.patientlist.api.DoctorRequestedByPatientService;
+import org.openmrs.module.patientlist.PatientLocation;
 import org.openmrs.module.patientlist.api.PatientListItemService;
-import org.openmrs.module.patientlist.api.PatientSpecialtyNeededItemService;
-import org.openmrs.module.patientlist.api.SpecialtyTypeItemService;
+
 import org.openmrs.module.uicommons.util.InfoErrorMessageUtil;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
@@ -33,27 +31,25 @@ import org.openmrs.module.webservices.rest.web.response.ResponseException;
 /**
  * @author levine
  */
-@Resource(name = RestConstants.VERSION_1 + "/doctorrequested", supportedClass = DoctorRequestedShort.class, supportedOpenmrsVersions = {
+@Resource(name = RestConstants.VERSION_1 + "/patientlocation", supportedClass = PatientLocation.class, supportedOpenmrsVersions = {
         "2.0.*", "2.1.*", "2.2.*", "2.3.*", "2.4.*" })
-public class DoctorRequestedResource extends DataDelegatingCrudResource<DoctorRequestedShort> {
+public class PatientLocationResource extends DataDelegatingCrudResource<PatientLocation> {
 	
 	@Override
-	public NeedsPaging<User> doGetAll(RequestContext context) {
+	public NeedsPaging<PatientLocation> doGetAll(RequestContext context) {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 	
 	@Override
-	public DoctorRequestedShort getByUniqueId(String string) {
+	public PatientLocation getByUniqueId(String string) {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 	
-	@Override
-	protected void delete(DoctorRequestedShort t, String string, RequestContext rc) throws ResponseException {
+	protected void delete(PatientLocation t, String string, RequestContext rc) throws ResponseException {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 	
-	@Override
-	public void purge(DoctorRequestedShort t, RequestContext rc) throws ResponseException {
+	public void purge(PatientLocation t, RequestContext rc) throws ResponseException {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 	
@@ -62,14 +58,14 @@ public class DoctorRequestedResource extends DataDelegatingCrudResource<DoctorRe
 		if (r instanceof DefaultRepresentation) {
 			DelegatingResourceDescription description = new DelegatingResourceDescription();
 			description.addProperty("patientUUID");
-			description.addProperty("doctorUserId");
+			description.addProperty("patientLocation");
 			description.addLink("default", ".?v=" + RestConstants.REPRESENTATION_DEFAULT);
 			description.addSelfLink();
 			return description;
 		} else if (r instanceof FullRepresentation) {
 			DelegatingResourceDescription description = new DelegatingResourceDescription();
 			description.addProperty("patientUUID");
-			description.addProperty("doctorUserId");
+			description.addProperty("patientLocation");
 			description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
 			description.addSelfLink();
 			return description;
@@ -78,25 +74,31 @@ public class DoctorRequestedResource extends DataDelegatingCrudResource<DoctorRe
 	}
 	
 	@Override
-	public DoctorRequestedShort newDelegate() {
+	public PatientLocation newDelegate() {
 		System.out.println("****************newDelegate: ");
-		return new DoctorRequestedShort();
+		return new PatientLocation();
 	}
 	
 	@Override
-	public DoctorRequestedShort save(DoctorRequestedShort t) {
-		System.out.println("****************SAVE: " + t.getDoctorUserId() + " " + t.getPatientUUID());
-		DoctorRequestedByPatient doctorRequestedByPatient = new DoctorRequestedByPatient();
-		doctorRequestedByPatient.setDateCreated(new Date());
+	public PatientLocation save(PatientLocation t) {
+		System.out.println("****************SAVE: " + t.getPatientUUID() + " location: " + t.getPatientLocation());
+		Person person = Context.getPersonService().getPersonByUuid(t.getPatientUUID());
 		Patient patient = Context.getPatientService().getPatientByUuid(t.getPatientUUID());
-		doctorRequestedByPatient.setPatientId(patient.getPatientId());
-		doctorRequestedByPatient.setDoctorId(Integer.valueOf(t.getDoctorUserId()));
-		Context.getService(DoctorRequestedByPatientService.class).saveDoctorRequestedByPatient(doctorRequestedByPatient);
+		PersonAttributeType attType = Context.getPersonService().getPersonAttributeTypeByName("Address");
+		PersonAttribute p = new PersonAttribute();
+		p.setPerson(person);
+		p.setDateCreated(new Date());
+		p.setAttributeType(attType);
+		p.setValue(t.getPatientLocation());
+		patient.addAttribute(p);
+		// patient UUID is taken from person UUID
+		
+		Context.getPatientService().savePatient(patient);
 		return t;
 	}
 	
 	@PropertyGetter("display")
-	public String getDisplayString(DoctorRequestedShort item) {
+	public String getDisplayString(PatientLocation item) {
 		return item.getPatientUUID();
 	}
 	
@@ -104,7 +106,7 @@ public class DoctorRequestedResource extends DataDelegatingCrudResource<DoctorRe
 	public DelegatingResourceDescription getCreatableProperties() {
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
 		description.addProperty("patientUUID");
-		description.addProperty("doctorUserId");
+		description.addProperty("patientLocation");
 		return description;
 	}
 }

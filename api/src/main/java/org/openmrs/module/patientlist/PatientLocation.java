@@ -5,18 +5,18 @@ import org.openmrs.BaseOpenmrsData;
 /**
  * @author levine
  */
-public class DoctorRequestedShort extends BaseOpenmrsData {
+public class PatientLocation extends BaseOpenmrsData {
 	
-	private String doctorUserId;
+	private String patientLocation;
 	
 	private String patientUUID;
 	
-	public String getDoctorUserId() {
-		return doctorUserId;
+	public String getPatientLocation() {
+		return patientLocation;
 	}
 	
-	public void setDoctorUserId(String doctorUserId) {
-		this.doctorUserId = doctorUserId;
+	public void setPatientLocation(String patientLocation) {
+		this.patientLocation = patientLocation;
 	}
 	
 	public String getPatientUUID() {

@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import org.openmrs.Patient;
 import org.openmrs.Person;
 import org.openmrs.Role;
 import org.openmrs.User;
@@ -40,9 +41,8 @@ public class PatientListFragFragmentController {
 	public void controller(HttpServletRequest request, FragmentModel model, HttpSession session) {
 		System.out.println("*******PatientListFragFragmentController");
 		
-		List<SpecialtyTypeItem> items;
-		items = Context.getService(SpecialtyTypeItemService.class).getAllSpecialtyTypeItem();
-		
+		List<SpecialtyTypeItem> specialtyItems;
+		specialtyItems = Context.getService(SpecialtyTypeItemService.class).getAllSpecialtyTypeItem();
 		String url = getURL(request);
 		
 		String userRole = "";
@@ -125,7 +125,7 @@ public class PatientListFragFragmentController {
 		model.addAttribute("oldPatientListItems", oldPatientListItems);
 		model.addAttribute("url", url);
 		model.addAttribute("role", userRole);
-		model.addAttribute("items", items);
+		model.addAttribute("items", specialtyItems);
 		model.addAttribute("doctors", doctors);
 		model.addAttribute("numActive", activePatientListItems.size());
 	}
@@ -173,15 +173,19 @@ public class PatientListFragFragmentController {
 		List<PatientSpecialtyNeededItem> patientSpecialties;
 		patientSpecialties = Context.getService(PatientSpecialtyNeededItemService.class)
 		        .getPatientSpecialtyNeededItemForPatient(patientId);
+		System.out
+		        .println("getMostRecentSpecialtyForPatient, patient id: " + patientId + " numspecs: " + patientSpecialties);
 		if ((patientSpecialties == null) || (patientSpecialties.size() == 0)) {
 			return 0;
 		}
 		PatientSpecialtyNeededItem newItem = patientSpecialties.get(0);
 		for (PatientSpecialtyNeededItem item : patientSpecialties) {
+			System.out.println("newitem, item: " + newItem.getDateCreated() + " " + item.getDateCreated());
 			if (item.getDateCreated().after(newItem.getDateCreated())) {
 				newItem = item;
 			}
 		}
+		System.out.println("RETURNING: " + newItem.getDateCreated() + " spec: " + newItem.getSpecialtyTypeId());
 		return newItem.getSpecialtyTypeId();
 	}
 	

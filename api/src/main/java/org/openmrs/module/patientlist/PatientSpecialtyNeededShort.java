@@ -12,24 +12,24 @@ import org.openmrs.BaseOpenmrsData;
  */
 public class PatientSpecialtyNeededShort extends BaseOpenmrsData {
 	
-	private String specialty;
+	private String specialtyId;
 	
-	private String patientId;
+	private String patientUUID;
 	
-	public String getSpecialty() {
-		return specialty;
+	public String getSpecialtyId() {
+		return specialtyId;
 	}
 	
-	public void setSpecialty(String specialty) {
-		this.specialty = specialty;
+	public void setSpecialtyId(String specialtyId) {
+		this.specialtyId = specialtyId;
 	}
 	
-	public String getPatientId() {
-		return patientId;
+	public String getPatientUUID() {
+		return patientUUID;
 	}
 	
-	public void setPatientId(String patientId) {
-		this.patientId = patientId;
+	public void setPatientUUID(String patientUUID) {
+		this.patientUUID = patientUUID;
 	}
 	
 	@Override

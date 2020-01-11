@@ -3,6 +3,7 @@ package org.openmrs.module.patientlist.web.controller;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.patientlist.PatientListItem;
 import org.openmrs.module.patientlist.PatientListItemShort;
@@ -56,15 +57,15 @@ public class PatientSpecialtyNeededResource extends DataDelegatingCrudResource<P
 	public DelegatingResourceDescription getRepresentationDescription(Representation r) {
 		if (r instanceof DefaultRepresentation) {
 			DelegatingResourceDescription description = new DelegatingResourceDescription();
-			description.addProperty("patientId");
-			description.addProperty("specialty");
+			description.addProperty("patientUUID");
+			description.addProperty("specialtyId");
 			description.addLink("default", ".?v=" + RestConstants.REPRESENTATION_DEFAULT);
 			description.addSelfLink();
 			return description;
 		} else if (r instanceof FullRepresentation) {
 			DelegatingResourceDescription description = new DelegatingResourceDescription();
-			description.addProperty("patientId");
-			description.addProperty("specialty");
+			description.addProperty("patientUUID");
+			description.addProperty("specialtyId");
 			description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
 			description.addSelfLink();
 			return description;
@@ -80,25 +81,32 @@ public class PatientSpecialtyNeededResource extends DataDelegatingCrudResource<P
 	
 	@Override
 	public PatientSpecialtyNeededShort save(PatientSpecialtyNeededShort t) {
-		System.out.println("****************SAVE: " + t);
+		System.out.println("****************SAVE: " + t.getPatientUUID() + " specId: " + t.getSpecialtyId());
 		PatientSpecialtyNeededItem patientSpecialtyNeededItem = new PatientSpecialtyNeededItem();
 		patientSpecialtyNeededItem.setDateCreated(new Date());
-		patientSpecialtyNeededItem.setPatientId(Integer.valueOf(t.getPatientId()));
+		Patient patient = Context.getPatientService().getPatientByUuid(t.getPatientUUID());
+		patientSpecialtyNeededItem.setPatientId(patient.getPatientId());
+		int specId = Integer.valueOf(t.getSpecialtyId());
+		patientSpecialtyNeededItem.setSpecialtyTypeId(specId);
+		
+		/*
 		int medSpecialtyId = 0;
 		int specNeeded = 0;
 		List<SpecialtyTypeItem> specs = Context.getService(SpecialtyTypeItemService.class).getAllSpecialtyTypeItem();
 		for (SpecialtyTypeItem spec : specs) {
-			if (spec.getName().equalsIgnoreCase("Medicine")) {
-				medSpecialtyId = spec.getId();
-			}
-			if (spec.getName().equalsIgnoreCase(t.getSpecialty())) {
-				specNeeded = spec.getId();
-				patientSpecialtyNeededItem.setSpecialtyTypeId(specNeeded);
-			}
+		    if (spec.getName().equalsIgnoreCase("Medicine")) {
+		        medSpecialtyId = spec.getId();
+		    }
+		    if (spec.getName().equalsIgnoreCase(t.getSpecialty())) {
+		        specNeeded = spec.getId();
+		        patientSpecialtyNeededItem.setSpecialtyTypeId(specNeeded);
+		    }
 		}
 		if (specNeeded == 0) {
-			patientSpecialtyNeededItem.setSpecialtyTypeId(medSpecialtyId);
+		    patientSpecialtyNeededItem.setSpecialtyTypeId(medSpecialtyId);
 		}
+		*/
+		
 		Context.getService(PatientSpecialtyNeededItemService.class).savePatientSpecialtyNeededItem(
 		    patientSpecialtyNeededItem);
 		return t;
@@ -106,14 +114,14 @@ public class PatientSpecialtyNeededResource extends DataDelegatingCrudResource<P
 	
 	@PropertyGetter("display")
 	public String getDisplayString(PatientSpecialtyNeededShort item) {
-		return item.getPatientId();
+		return item.getPatientUUID();
 	}
 	
 	@Override
 	public DelegatingResourceDescription getCreatableProperties() {
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
-		description.addProperty("patientId");
-		description.addProperty("specialty");
+		description.addProperty("patientUUID");
+		description.addProperty("specialtyId");
 		return description;
 	}
 }

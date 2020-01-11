@@ -68,8 +68,13 @@
         <advice>
             <point>org.openmrs.api.EncounterService</point>
             <class>org.openmrs.module.patientlist.advice.SendSMSLabsDrugsAdvice</class>
-        </advice>       
-        
+        </advice>    
+<!--        
+        <advice>
+            <point>org.openmrs.api.EncounterService</point>
+            <class>org.openmrs.module.patientlist.advice.DoctorConsultResponseAfterSaveAdvise</class>
+        </advice>     
+-->        
         <globalProperty>
 		<property>patientlist.clerkrole</property>
 		<defaultValue></defaultValue>

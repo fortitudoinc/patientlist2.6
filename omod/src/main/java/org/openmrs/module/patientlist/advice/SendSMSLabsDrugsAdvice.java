@@ -32,7 +32,6 @@ public class SendSMSLabsDrugsAdvice implements MethodBeforeAdvice {
 		byte[] b = new byte[20];
 		new Random().nextBytes(b);
 		String tmpTopicName = "physician-message-tmp-" + Hex.encodeHexString(b);
-		
 		// Initialize AWS client
 		AmazonSNSClient snsClient = new AmazonSNSClient();
 		snsClient.setRegion(Region.getRegion(Regions.US_EAST_1));
@@ -93,7 +92,7 @@ public class SendSMSLabsDrugsAdvice implements MethodBeforeAdvice {
 					System.out.println("********** SENDING SMS");
 					
 					try {
-						sendAwsSms(patientTelNo, encTypeName + ": " + obs.getValueText());
+						//sendAwsSms(patientTelNo, encTypeName + ": " + obs.getValueText());
 					}
 					catch (Exception e) {
 						System.out.println("There was an error sending the sms message:");

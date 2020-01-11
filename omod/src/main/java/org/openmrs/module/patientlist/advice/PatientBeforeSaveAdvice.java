@@ -14,6 +14,9 @@ import org.springframework.aop.MethodBeforeAdvice;
  */
 public class PatientBeforeSaveAdvice implements MethodBeforeAdvice {
 	
+	/*
+	    THIS IS NOT USED - NOT MENTIONED IN THE CONFIG FILE
+	*/
 	@Override
 	public void before(Method method, Object[] os, Object o) throws Throwable {
 		if (!method.getName().equals("savePatient")) {
