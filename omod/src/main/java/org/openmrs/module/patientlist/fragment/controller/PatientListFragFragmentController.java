@@ -173,19 +173,19 @@ public class PatientListFragFragmentController {
 		List<PatientSpecialtyNeededItem> patientSpecialties;
 		patientSpecialties = Context.getService(PatientSpecialtyNeededItemService.class)
 		        .getPatientSpecialtyNeededItemForPatient(patientId);
-		System.out
-		        .println("getMostRecentSpecialtyForPatient, patient id: " + patientId + " numspecs: " + patientSpecialties);
+		//System.out
+		//       .println("getMostRecentSpecialtyForPatient, patient id: " + patientId + " numspecs: " + patientSpecialties);
 		if ((patientSpecialties == null) || (patientSpecialties.size() == 0)) {
 			return 0;
 		}
 		PatientSpecialtyNeededItem newItem = patientSpecialties.get(0);
 		for (PatientSpecialtyNeededItem item : patientSpecialties) {
-			System.out.println("newitem, item: " + newItem.getDateCreated() + " " + item.getDateCreated());
+			//System.out.println("newitem, item: " + newItem.getDateCreated() + " " + item.getDateCreated());
 			if (item.getDateCreated().after(newItem.getDateCreated())) {
 				newItem = item;
 			}
 		}
-		System.out.println("RETURNING: " + newItem.getDateCreated() + " spec: " + newItem.getSpecialtyTypeId());
+		//System.out.println("RETURNING: " + newItem.getDateCreated() + " spec: " + newItem.getSpecialtyTypeId());
 		return newItem.getSpecialtyTypeId();
 	}
 	
@@ -204,9 +204,14 @@ public class PatientListFragFragmentController {
 				nextRequest = doctorRequested;
 			}
 		}
+		//System.out.println("getMostRecentDoctorRequestedByPatientForPatient, most recent doc id: "
+		//      + nextRequest.getDoctorId() + "\n" + "nextreqdate,itemcreateddate: " + nextRequest.getDateCreated() + " "
+		//     + datePatientListItemCreated);
 		if (nextRequest.getDateCreated().before(datePatientListItemCreated)) {
+			//System.out.println("nextRequest.getDoctorId() is before datePatientListItemCreated...return 0");
 			return 0;
 		}
+		//System.out.println("RETURNING ID: " + nextRequest.getDoctorId());
 		return nextRequest.getDoctorId();
 	}
 	

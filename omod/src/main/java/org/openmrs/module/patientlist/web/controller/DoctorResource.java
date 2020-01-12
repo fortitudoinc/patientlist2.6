@@ -12,8 +12,6 @@ import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.patientlist.DoctorItem;
-import org.openmrs.module.patientlist.SpecialtyTypeItem;
-import org.openmrs.module.patientlist.api.SpecialtyTypeItemService;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.PropertyGetter;
@@ -42,7 +40,12 @@ public class DoctorResource extends DataDelegatingCrudResource<DoctorItem> {
 		
 		for (User user : users) {
 			userRoles = user.getAllRoles();
+			if (user.getRetired()) {
+				continue;
+			}
 			for (Role role : userRoles) {
+				//System.out.println("user: " + user.getGivenName() + " " + user.getFamilyName() + " retired: "
+				//  + user.getRetired() + " role: " + role.getName());
 				if (role.getName().equalsIgnoreCase(drRole)) {
 					DoctorItem drItem = new DoctorItem(user.getGivenName(), user.getFamilyName(), user.getUserId());
 					doctors.add(drItem);
