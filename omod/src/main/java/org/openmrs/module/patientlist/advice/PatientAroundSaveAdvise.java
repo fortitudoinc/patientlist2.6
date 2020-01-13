@@ -65,14 +65,6 @@ public class PatientAroundSaveAdvise extends StaticMethodMatcherPointcutAdvisor 
 				System.out.println("EDITING CURRENT PATIENT");
 				return invocation.proceed();
 			}
-			if (isPatientAlreadyRegistered(patient)) {
-				System.out.println("PATIENT ALREADY REGISTERED");
-				if (!isOldPatientInActiveList()) {
-					System.out.println("PATIENT ADDING OLD PATIENT TO PATIENT LIST");
-					addPatientToActiveList(oldPatient);
-				}
-				return oldPatient;
-			}
 			
 			/*
 			Here are the phone formats:
@@ -96,6 +88,15 @@ public class PatientAroundSaveAdvise extends StaticMethodMatcherPointcutAdvisor 
 			}
 			
 			System.out.println("AROUND******* telNo: " + patient.getAttribute("Telephone Number").getValue());
+			
+			if (isPatientAlreadyRegistered(patient)) {
+				System.out.println("PATIENT ALREADY REGISTERED");
+				if (!isOldPatientInActiveList()) {
+					System.out.println("PATIENT ADDING OLD PATIENT TO PATIENT LIST");
+					addPatientToActiveList(oldPatient);
+				}
+				return oldPatient;
+			}
 			
 			// the proceed() method does not have to be called
 			Patient newPatient = (Patient) invocation.proceed();
