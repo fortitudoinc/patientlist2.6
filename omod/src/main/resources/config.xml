@@ -51,6 +51,10 @@
         </advice>
         -->
 	<advice>
+            <point>org.openmrs.module.patientlist.api.DoctorRequestedByPatientService</point>
+            <class>org.openmrs.module.patientlist.advice.DoctorRequestedAfterSaveAdvise</class>
+        </advice>        
+	<advice>
             <point>org.openmrs.api.PatientService</point>
             <class>org.openmrs.module.patientlist.advice.PatientAroundSaveAdvise</class>
         </advice>
@@ -64,12 +68,14 @@
             <point>org.openmrs.api.ObsService</point>
             <class>org.openmrs.module.patientlist.advice.SendSMSLabsDrugsAdvice</class>
         </advice>       
--->                    
+-->            
+
         <advice>
             <point>org.openmrs.api.EncounterService</point>
             <class>org.openmrs.module.patientlist.advice.SendSMSLabsDrugsAdvice</class>
-        </advice>    
-<!--        
+        </advice>   
+
+        <!--        
         <advice>
             <point>org.openmrs.api.EncounterService</point>
             <class>org.openmrs.module.patientlist.advice.DoctorConsultResponseAfterSaveAdvise</class>

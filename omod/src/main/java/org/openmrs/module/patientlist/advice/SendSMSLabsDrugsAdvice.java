@@ -15,10 +15,10 @@ import com.amazonaws.services.sns.AmazonSNSClient;
 import com.amazonaws.services.sns.model.CreateTopicRequest;
 import com.amazonaws.services.sns.model.CreateTopicResult;
 import org.apache.commons.codec.binary.Hex;
+
 import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.PersonAttribute;
-import org.openmrs.api.context.Context;
 import org.springframework.aop.MethodBeforeAdvice;
 
 /**

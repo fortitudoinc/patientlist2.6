@@ -18,6 +18,15 @@
                 "icon": "icon-signin",
                 "requiredPrivilege": "App: patient list"
             },
+            {
+                "id": "${project.parent.artifactId}.enterdoctortelephon",
+                "extensionPointId": "org.openmrs.referenceapplication.homepageLink",
+                "type": "link",
+                "label": "Enter Physician Phone Number",
+                "url": "patientlist/enterDoctorPhoneNumber.page",
+                "icon": "icon-signin",
+                "requiredPrivilege": "App: enter dr telno"
+            },            
            {
                 "id": "${project.parent.artifactId}.physicianpaymentreport",
                 "extensionPointId": "org.openmrs.referenceapplication.homepageLink",
