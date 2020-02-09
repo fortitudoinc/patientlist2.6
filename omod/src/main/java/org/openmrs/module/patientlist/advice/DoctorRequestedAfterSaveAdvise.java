@@ -9,11 +9,13 @@ import org.openmrs.User;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.patientlist.DoctorRequestedByPatient;
 import org.springframework.aop.AfterReturningAdvice;
+
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.sns.AmazonSNSClient;
 import com.amazonaws.services.sns.model.CreateTopicRequest;
 import com.amazonaws.services.sns.model.CreateTopicResult;
+
 import java.util.Random;
 import org.apache.commons.codec.binary.Hex;
 

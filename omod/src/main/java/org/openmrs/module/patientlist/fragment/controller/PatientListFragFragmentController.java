@@ -72,7 +72,19 @@ public class PatientListFragFragmentController {
 		
 		if ((userRole.equals(clerkRole)) || (userRole.equals(adminRole))) {
 			oldItems = Context.getService(PatientListItemService.class).getOldPatientListItems();
+			int oldPatientId;
 			for (PatientListItem item : oldItems) {
+				oldPatientId = item.getPatientId();
+				Patient oldPatient = Context.getPatientService().getPatient(oldPatientId);
+				System.out.println("PatientListFragFragmentController oldPatientId: " + oldPatientId);
+				if (oldPatient == null) {
+					System.out.println("DIDN'T FIND OLD PATIENT");
+				} else {
+					System.out.println("name: " + oldPatient.getGivenName() + " " + oldPatient.getFamilyName());
+				}
+				if (oldPatient.getVoided()) {
+					continue;
+				}
 				oldPatientListItems.add(new PatientListItemLocal(item, 0, null));
 			}
 			Collections.sort(oldPatientListItems, new Comparator<PatientListItemLocal>() {
@@ -105,6 +117,16 @@ public class PatientListFragFragmentController {
 		for (PatientListItem item : activeItems) {
 			//activePatientListItems.add(new PatientListItemLocal(item, 0));
 			patientId = item.getPatientId();
+			Patient activePatient = Context.getPatientService().getPatient(patientId);
+			//System.out.println("PatientListFragFragmentController oldPatientId: " + oldPatientId);
+			if (activePatient == null) {
+				System.out.println("DIDN'T FIND OLD PATIENT");
+			} else {
+				//System.out.println("name: " + activePatient.getGivenName() + " " + activePatient.getFamilyName());
+			}
+			if (activePatient.getVoided()) {
+				continue;
+			}
 			specId = getMostRecentSpecialtyForPatient(patientId);
 			//System.out.println("CONTROLLER...patiendId: " + patientId + " dr role: " + drRole + " item.getPatientCallDate: "
 			//        + item.getPatientCallDate());

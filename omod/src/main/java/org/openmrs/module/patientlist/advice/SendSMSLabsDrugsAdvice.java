@@ -92,7 +92,7 @@ public class SendSMSLabsDrugsAdvice implements MethodBeforeAdvice {
 					System.out.println("********** SENDING SMS");
 					
 					try {
-						//sendAwsSms(patientTelNo, encTypeName + ": " + obs.getValueText());
+						sendAwsSms(patientTelNo, encTypeName + ": " + obs.getValueText());
 					}
 					catch (Exception e) {
 						System.out.println("There was an error sending the sms message:");
