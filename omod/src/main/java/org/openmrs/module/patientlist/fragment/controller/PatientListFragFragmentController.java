@@ -15,6 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.openmrs.Patient;
 import org.openmrs.Person;
+import org.openmrs.PersonAddress;
+import org.openmrs.PersonAttribute;
+import org.openmrs.PersonAttributeType;
 import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.api.context.Context;
@@ -23,11 +26,14 @@ import org.openmrs.module.appframework.service.AppFrameworkService;
 import org.openmrs.module.patientlist.DoctorRequestedByPatient;
 import org.openmrs.module.patientlist.PatientListItem;
 import org.openmrs.module.patientlist.PatientSpecialtyNeededItem;
+import org.openmrs.module.patientlist.PersonCountries;
 import org.openmrs.module.patientlist.SpecialtyTypeItem;
 import org.openmrs.module.patientlist.api.DoctorRequestedByPatientService;
 import org.openmrs.module.patientlist.api.PatientListItemService;
 import org.openmrs.module.patientlist.api.PatientSpecialtyNeededItemService;
+import org.openmrs.module.patientlist.api.PersonCountriesService;
 import org.openmrs.module.patientlist.api.SpecialtyTypeItemService;
+import org.openmrs.module.patientlist.api.impl.PersonCountriesServiceImpl;
 import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.fragment.FragmentModel;
@@ -56,6 +62,49 @@ public class PatientListFragFragmentController {
 		globalPropertyRoles.add(adminRole);
 		
 		User user = Context.getAuthenticatedUser();
+		Person person = user.getPerson();
+		PersonCountries p;
+		List<PersonCountries> pp = Context.getService(PersonCountriesService.class).getPersonCountriesForPerson(
+		    person.getPersonId());
+		String userCountries = pp.get(0).getCountries();
+		/*
+		PersonAddress address;
+		address = new PersonAddress();
+		address.setPerson(person);
+		address.setAddress6("Ghana,Uganda,Nigeriar");
+		address.setCreator(user);
+		address.setDateCreated(new Date());
+		address = Context.getPersonService().savePersonAddress(address);
+		
+		if (address == null) {
+		address = new PersonAddress();
+		address.setPerson(person);
+		address.setAddress6("Ghana,Uganda,Nigeriayy");
+		address.setCreator(user);
+		address.setDateCreated(new Date());
+		Context.getPersonService().savePersonAddress(address);
+		} else {
+		address.setAddress6(address.getAddress6() + "x");
+		Context.getPersonService().savePersonAddress(address);
+		}
+		
+		person = Context.getPersonService().getPersonByUuid(person.getUuid());
+		System.out.println("Person: " + person.getGivenName() + " " + person.getFamilyName() + " Country: "
+		+ person.getPersonAddress().getAddress6());
+		
+		PersonAttributeType attType = Context.getPersonService().getPersonAttributeTypeByName("Country");
+		PersonAttribute p = new PersonAttribute();
+		p.setPerson(person1);
+		p.setDateCreated(new Date());
+		p.setAttributeType(attType);
+		p.setValue("tanz");
+		person.addAttribute(p);
+		Context.getPersonService().savePerson(person);
+		person = Context.getPersonService().getPersonByUuid(person1.getUuid());
+		for (PersonAttribute patt : person.getAttributes(attType.getPersonAttributeTypeId())) {
+		System.out.println("PersonId: " + person.getPersonId() + " Country: " + patt.getValue());
+		}
+		 */
 		Set<Role> userRoles = user.getAllRoles();
 		for (Role role : userRoles) {
 			String roleName = role.getName();
@@ -67,6 +116,7 @@ public class PatientListFragFragmentController {
 		}
 		System.out.println("USER ROLE: " + userRole);
 		
+		String patientCountry;
 		List<PatientListItem> oldItems = new ArrayList<PatientListItem>();
 		ArrayList<PatientListItemLocal> oldPatientListItems = new ArrayList<PatientListItemLocal>();
 		
@@ -85,7 +135,10 @@ public class PatientListFragFragmentController {
 				if (oldPatient.getVoided()) {
 					continue;
 				}
-				oldPatientListItems.add(new PatientListItemLocal(item, 0, null));
+				patientCountry = getPersonCountry(oldPatientId);
+				if (isPatientCountryInDrCountries(patientCountry, userCountries)) {
+					oldPatientListItems.add(new PatientListItemLocal(item, 0, null, patientCountry));
+				}
 			}
 			Collections.sort(oldPatientListItems, new Comparator<PatientListItemLocal>() {
 				
@@ -133,7 +186,15 @@ public class PatientListFragFragmentController {
 			docRequestedAndDoctors = getRequestedDoctorAndAllDoctors(patientId, drRole, item.getPatientCallDate());
 			doctors = docRequestedAndDoctors.getDoctors();
 			doctorRequested = docRequestedAndDoctors.getDoctorRequested();
-			activePatientListItems.add(new PatientListItemLocal(item, specId, doctorRequested));
+			if (doctorRequested == null) {
+				System.out.println("******NO DOCTOR REQUESTED!!");
+			} else {
+				System.out.println("*****************PatientListFragFragmentController, doctorRequested");
+			}
+			patientCountry = getPersonCountry(patientId);
+			if (isPatientCountryInDrCountries(patientCountry, userCountries)) {
+				activePatientListItems.add(new PatientListItemLocal(item, specId, doctorRequested, patientCountry));
+			}
 		}
 		
 		Collections.sort(activePatientListItems, new Comparator<PatientListItemLocal>() {
@@ -237,6 +298,18 @@ public class PatientListFragFragmentController {
 		return nextRequest.getDoctorId();
 	}
 	
+	boolean isPatientCountryInDrCountries(String patientCountry, String userCountries) {
+		return userCountries.contains(patientCountry);
+	}
+	
+	String getPersonCountry(int personId) {
+		List<PersonCountries> pp = Context.getService(PersonCountriesService.class).getPersonCountriesForPerson(personId);
+		if ((pp == null) || pp.isEmpty()) {
+			return " ";
+		}
+		return pp.get(0).getCountries();
+	}
+	
 	public SimpleObject updateSpecialty(@RequestParam(value = "specId", required = false) String specId,
 	        @RequestParam(value = "patientId", required = false) String patientId, UiUtils ui) {
 		PatientSpecialtyNeededItem ps = new PatientSpecialtyNeededItem();
@@ -291,6 +364,8 @@ class PatientListItemLocal {
 	
 	Date patientCallDate, lastContactAttemptDate;
 	
+	String country;
+	
 	String voidedReason;
 	
 	String patientPhone, patientName;
@@ -307,7 +382,16 @@ class PatientListItemLocal {
 		return patientName;
 	}
 	
-	public PatientListItemLocal(org.openmrs.module.patientlist.PatientListItem item, int specId, User doctorRequested) {
+	public String getCountry() {
+		return country;
+	}
+	
+	public void setCountry(String country) {
+		this.country = country;
+	}
+	
+	public PatientListItemLocal(org.openmrs.module.patientlist.PatientListItem item, int specId, User doctorRequested,
+	    String country) {
 		//System.out.println("**********************Patient id: " + item.getPatientId() + " Spec id: " + specId
 		//        + " Dr Requested: " + doctorRequested);
 		if (specId == 0) {
@@ -316,6 +400,7 @@ class PatientListItemLocal {
 			specItem = Context.getService(SpecialtyTypeItemService.class).getSpecialtyTypeItem(specId);
 		}
 		this.doctorRequested = doctorRequested;
+		this.country = country;
 		id = item.getId();
 		patientId = item.getPatientId();
 		contactAttempts = item.getContactAttempts();

@@ -19,11 +19,11 @@
                 "requiredPrivilege": "App: patient list"
             },
             {
-                "id": "${project.parent.artifactId}.enterdoctortelephon",
+                "id": "${project.parent.artifactId}.enterusertelephon",
                 "extensionPointId": "org.openmrs.referenceapplication.homepageLink",
                 "type": "link",
-                "label": "Enter Physician Phone Number",
-                "url": "patientlist/enterDoctorPhoneNumber.page",
+                "label": "Enter Personnel Information",
+                "url": "patientlist/enterPersonnelInfo.page",
                 "icon": "icon-signin",
                 "requiredPrivilege": "App: enter dr telno"
             },            

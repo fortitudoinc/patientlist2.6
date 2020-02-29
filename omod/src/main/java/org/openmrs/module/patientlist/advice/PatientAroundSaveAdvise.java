@@ -65,28 +65,16 @@ public class PatientAroundSaveAdvise extends StaticMethodMatcherPointcutAdvisor 
 				System.out.println("EDITING CURRENT PATIENT");
 				return invocation.proceed();
 			}
-			
 			/*
-			Here are the phone formats:
-
-			1. 08033201866 (11 digit format recognized by AWS
-			2. +2348033201866 (13 digit format with +234 being country code followed by the phone number after the initial 0 is removed). 
-
-			Allow them to enter in either format but then the number is posted on the patientlist in the first format, 
-			*/
 			PersonAttribute att = patient.getAttribute("Telephone Number");
 			String telNo = att.getValue();
 			if ((telNo.startsWith("+")) || (telNo.startsWith("234"))) {
-				if (telNo.startsWith("+")) {
-					telNo = "0" + telNo.substring(4);
-				} else {
-					telNo = "0" + telNo.substring(3);
-				}
+				
 				patient.removeAttribute(att);
 				att.setValue(telNo);
 				patient.addAttribute(att);
 			}
-			
+			*/
 			System.out.println("AROUND******* telNo: " + patient.getAttribute("Telephone Number").getValue());
 			
 			if (isPatientAlreadyRegistered(patient)) {

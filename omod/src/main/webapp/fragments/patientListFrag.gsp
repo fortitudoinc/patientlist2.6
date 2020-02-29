@@ -98,7 +98,7 @@ if (${numActive} > 0 ) {
 
 <th>Patient Name</th>
 <th>Contact Attempts</th> 
-<th>Patient Call Date</th>
+<th>Country</th>
 <th>Last Contact Attempt Date</th>
 <th>tel</th>
 <th>Dashboard</th>
@@ -151,11 +151,9 @@ if (${numActive} > 0 ) {
 
 <td>${ ui.format(it.patientName)}</td>
 <td>${ ui.format(it.contactAttempts)}</td>
-<td>${ ui.format(it.patientCallDate)}</td>
+<td>${ ui.format(it.country)}</td>
 <td>${ ui.format(it.lastContactAttemptDate)}</td>
-
 <td>${ ui.format(it.patientPhone)}</td>
-
 <td>
         <a href=$url$it.patientId>dashboard</a>
 </td>

@@ -40,5 +40,15 @@
         <property column="patient_id" name="patientId" not-null="true"/>
         <property column="doctor_id" name="doctorId" not-null="true"/>
         <property column="date_created" name="dateCreated" not-null="true" type="java.util.Date"/>
-    </class>  
+    </class> 
+    
+        <class name="PersonCountries" table="person_countries">
+        <id column="id" name="id" type="int" unsaved-value="0">
+            <generator class="native"/>
+        </id>
+        <discriminator column="id" insert="false"/>
+        <property column="person_id" name="personId" not-null="true"/>
+        <property column="countries" name="countries" not-null="true"/>
+        <property column="date_created" name="dateCreated" not-null="true" type="java.util.Date"/>
+    </class>   
 </hibernate-mapping>

@@ -50,10 +50,16 @@
             <class>org.openmrs.module.patientlist.advice.PatientAfterSaveAdvice</class>
         </advice>
         -->
+        
+        
+        <!--
 	<advice>
             <point>org.openmrs.module.patientlist.api.DoctorRequestedByPatientService</point>
             <class>org.openmrs.module.patientlist.advice.DoctorRequestedAfterSaveAdvise</class>
-        </advice>        
+        </advice>  
+        -->
+              
+                          
 	<advice>
             <point>org.openmrs.api.PatientService</point>
             <class>org.openmrs.module.patientlist.advice.PatientAroundSaveAdvise</class>
@@ -125,7 +131,14 @@
 			we need the past medications form, copy uuid from
                     manage forms/history form
 		</description>
-	</globalProperty>                      
+	</globalProperty>     
+        <globalProperty>
+		<property>patientlist.countries</property>
+		<defaultValue>NIGERIA</defaultValue>
+		<description>
+			comma separated list of countries where we work
+		</description>
+	</globalProperty>                              
 	<!-- AOP
 	<advice>
 		<point>org.openmrs.api.FormService</point>

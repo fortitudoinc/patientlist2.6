@@ -9,12 +9,14 @@ import java.lang.reflect.Method;
 import java.util.Random;
 import java.util.Set;
 
+/*
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.sns.AmazonSNSClient;
 import com.amazonaws.services.sns.model.CreateTopicRequest;
 import com.amazonaws.services.sns.model.CreateTopicResult;
 import org.apache.commons.codec.binary.Hex;
+*/
 
 import org.openmrs.Encounter;
 import org.openmrs.Obs;
@@ -26,6 +28,7 @@ import org.springframework.aop.MethodBeforeAdvice;
  */
 public class SendSMSLabsDrugsAdvice implements MethodBeforeAdvice {
 	
+	/*
 	private void sendAwsSms(String phoneNumber, String msg) {
 		
 		// Generate a random topic name to avoid collisions
@@ -45,7 +48,7 @@ public class SendSMSLabsDrugsAdvice implements MethodBeforeAdvice {
 		snsClient.deleteTopic(createTopicResult.getTopicArn());
 		
 	}
-	
+	*/
 	/*
 	Need to get encounter type so we only send SMS when it's either a drug or lab order
 	encounter
@@ -87,12 +90,12 @@ public class SendSMSLabsDrugsAdvice implements MethodBeforeAdvice {
 				if (att != null) {
 					String patientTelNo = att.getValue();
 					//strip off leading 0 and add country code
-					patientTelNo = "+234" + patientTelNo.substring(1);
+					patientTelNo = patientTelNo.substring(1);
 					System.out.println("Tel no: " + patientTelNo);
 					System.out.println("********** SENDING SMS");
 					
 					try {
-						sendAwsSms(patientTelNo, encTypeName + ": " + obs.getValueText());
+						//sendAwsSms(patientTelNo, encTypeName + ": " + obs.getValueText());
 					}
 					catch (Exception e) {
 						System.out.println("There was an error sending the sms message:");

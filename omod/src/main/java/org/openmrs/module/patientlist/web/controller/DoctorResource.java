@@ -6,12 +6,15 @@
 package org.openmrs.module.patientlist.web.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.patientlist.DoctorItem;
+import org.openmrs.module.patientlist.PersonCountries;
+import org.openmrs.module.patientlist.api.PersonCountriesService;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.PropertyGetter;
@@ -37,6 +40,7 @@ public class DoctorResource extends DataDelegatingCrudResource<DoctorItem> {
 		List<DoctorItem> doctors = new ArrayList<DoctorItem>();
 		String drRole = Context.getAdministrationService().getGlobalProperty("patientlist.drrole");
 		Set<Role> userRoles;
+		String personCountries;
 		
 		for (User user : users) {
 			userRoles = user.getAllRoles();
@@ -47,7 +51,17 @@ public class DoctorResource extends DataDelegatingCrudResource<DoctorItem> {
 				//System.out.println("user: " + user.getGivenName() + " " + user.getFamilyName() + " retired: "
 				//  + user.getRetired() + " role: " + role.getName());
 				if (role.getName().equalsIgnoreCase(drRole)) {
-					DoctorItem drItem = new DoctorItem(user.getGivenName(), user.getFamilyName(), user.getUserId());
+					List<PersonCountries> pp = Context.getService(PersonCountriesService.class).getPersonCountriesForPerson(
+					    user.getPerson().getPersonId());
+					if ((pp == null) || (pp.size() == 0)) {
+						personCountries = " ";
+						
+					} else {
+						personCountries = pp.get(0).getCountries();
+						
+					}
+					DoctorItem drItem = new DoctorItem(user.getGivenName(), user.getFamilyName(), user.getUserId(),
+					        personCountries);
 					doctors.add(drItem);
 					System.out.println("Doctor: " + drItem);
 					break;
@@ -75,6 +89,7 @@ public class DoctorResource extends DataDelegatingCrudResource<DoctorItem> {
 			description.addProperty("givenName");
 			description.addProperty("familyName");
 			description.addProperty("userId");
+			description.addProperty("countries");
 			description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
 			description.addSelfLink();
 			return description;
@@ -83,6 +98,7 @@ public class DoctorResource extends DataDelegatingCrudResource<DoctorItem> {
 			description.addProperty("givenName");
 			description.addProperty("familyName");
 			description.addProperty("userId");
+			description.addProperty("countries");
 			description.addSelfLink();
 			return description;
 		}
@@ -100,7 +116,7 @@ public class DoctorResource extends DataDelegatingCrudResource<DoctorItem> {
 	
 	@PropertyGetter("display")
 	public String getDisplayString(DoctorItem doctor) {
-		return doctor.getGivenName() + "/" + doctor.getFamilyName() + "/" + doctor.getUserId();
+		return doctor.getGivenName() + "/" + doctor.getFamilyName() + "/" + doctor.getUserId() + "/" + doctor.getCountries();
 	}
 	
 	/*	

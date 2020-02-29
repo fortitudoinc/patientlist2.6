@@ -14,14 +14,25 @@ public class DoctorItem extends BaseOpenmrsData implements Serializable {
 	
 	private String familyName;
 	
+	private String countries;
+	
+	public String getCountries() {
+		return countries;
+	}
+	
+	public void setCountries(String countries) {
+		this.countries = countries;
+	}
+	
 	public DoctorItem() {
 		
 	}
 	
-	public DoctorItem(String givenName, String familyName, int userId) {
+	public DoctorItem(String givenName, String familyName, int userId, String countries) {
 		this.givenName = givenName;
 		this.familyName = familyName;
 		this.userId = userId;
+		this.countries = countries;
 	}
 	
 	public String getGivenName() {
