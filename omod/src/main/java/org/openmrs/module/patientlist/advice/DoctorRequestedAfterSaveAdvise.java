@@ -45,7 +45,7 @@ public class DoctorRequestedAfterSaveAdvise implements AfterReturningAdvice {
 		String message = "A Fortitudo patient has just requested your assistance";
 		
 		try {
-			//sendAwsSms(telNo, message);
+			sendAwsSms(telNo, message);
 		}
 		catch (Exception e) {
 			System.out.println("There was an error sending the sms message:");

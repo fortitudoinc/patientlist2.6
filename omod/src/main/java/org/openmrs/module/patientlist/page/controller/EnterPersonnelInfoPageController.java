@@ -51,6 +51,10 @@ public class EnterPersonnelInfoPageController {
 				}
 			}
 			 */
+			if (user.getRetired() || user.getPerson().isPersonVoided() || user.getPerson().isVoided()
+			        || user.getPerson().getVoided()) {
+				continue;
+			}
 			personId = user.getPerson().getPersonId();
 			List<PersonCountries> pp = Context.getService(PersonCountriesService.class).getPersonCountriesForPerson(
 			    user.getPerson().getPersonId());
