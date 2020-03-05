@@ -68,30 +68,6 @@ public class PatientListFragFragmentController {
 		    person.getPersonId());
 		String userCountries = pp.get(0).getCountries();
 		/*
-		PersonAddress address;
-		address = new PersonAddress();
-		address.setPerson(person);
-		address.setAddress6("Ghana,Uganda,Nigeriar");
-		address.setCreator(user);
-		address.setDateCreated(new Date());
-		address = Context.getPersonService().savePersonAddress(address);
-		
-		if (address == null) {
-		address = new PersonAddress();
-		address.setPerson(person);
-		address.setAddress6("Ghana,Uganda,Nigeriayy");
-		address.setCreator(user);
-		address.setDateCreated(new Date());
-		Context.getPersonService().savePersonAddress(address);
-		} else {
-		address.setAddress6(address.getAddress6() + "x");
-		Context.getPersonService().savePersonAddress(address);
-		}
-		
-		person = Context.getPersonService().getPersonByUuid(person.getUuid());
-		System.out.println("Person: " + person.getGivenName() + " " + person.getFamilyName() + " Country: "
-		+ person.getPersonAddress().getAddress6());
-		
 		PersonAttributeType attType = Context.getPersonService().getPersonAttributeTypeByName("Country");
 		PersonAttribute p = new PersonAttribute();
 		p.setPerson(person1);

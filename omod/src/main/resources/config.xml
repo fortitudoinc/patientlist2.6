@@ -44,20 +44,13 @@
 		<aware_of_module>org.openmrs.module.legacyui</aware_of_module>
 	</aware_of_modules>
 	
-        <!--
-	<advice>
-            <point>org.openmrs.api.PatientService</point>
-            <class>org.openmrs.module.patientlist.advice.PatientAfterSaveAdvice</class>
-        </advice>
-        -->
         
         
-        <!--
 	<advice>
             <point>org.openmrs.module.patientlist.api.DoctorRequestedByPatientService</point>
             <class>org.openmrs.module.patientlist.advice.DoctorRequestedAfterSaveAdvise</class>
         </advice>  
-        -->
+        
               
                           
 	<advice>
@@ -69,24 +62,21 @@
             <point>org.openmrs.api.VisitService</point>
             <class>org.openmrs.module.patientlist.advice.PatientStartingVisitAdvise</class>
         </advice>        
+
 <!--
+THIS IS NOT BEING USED - WE JUST WANT TO KNOW WHEN WE'RE SAVING ENCOUNTERS FOR LAB/MEDS (SEE NEXT ADVICE
+FOR ENCOUNTER
         <advice>
             <point>org.openmrs.api.ObsService</point>
             <class>org.openmrs.module.patientlist.advice.SendSMSLabsDrugsAdvice</class>
         </advice>       
--->            
+    -->        
 
         <advice>
             <point>org.openmrs.api.EncounterService</point>
             <class>org.openmrs.module.patientlist.advice.SendSMSLabsDrugsAdvice</class>
         </advice>   
-
-        <!--        
-        <advice>
-            <point>org.openmrs.api.EncounterService</point>
-            <class>org.openmrs.module.patientlist.advice.DoctorConsultResponseAfterSaveAdvise</class>
-        </advice>     
--->        
+       
         <globalProperty>
 		<property>patientlist.clerkrole</property>
 		<defaultValue></defaultValue>

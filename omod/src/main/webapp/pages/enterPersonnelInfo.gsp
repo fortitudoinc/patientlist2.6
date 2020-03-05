@@ -78,8 +78,7 @@ function isValidSubmit() {
    <select onchange="selectPersonnel(this.value)">
    <option value="0">Select Personnel</option>
     <% personnel.each { personel->%>
-     <option value="${personel.userId}/${personel.telno}/${personel.countries}">${personel.givenName + " " + personel.familyName
-            + " " + personel.countries + " " + personel.telno} </option>
+     <option value="${personel.userId}/${personel.telno}/${personel.countries}">${personel.givenName + " " + personel.familyName} </option>
      <% } %>
     </select>
      <% } %>

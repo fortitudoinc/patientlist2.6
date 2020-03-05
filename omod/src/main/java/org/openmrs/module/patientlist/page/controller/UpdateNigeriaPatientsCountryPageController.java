@@ -27,6 +27,9 @@ public class UpdateNigeriaPatientsCountryPageController {
 		PersonCountries personCountries;
 		int personId;
 		for (Patient patient : patients) {
+			if (patient.getPersonVoided() || patient.getVoided()) {
+				continue;
+			}
 			personId = patient.getPersonId();
 			pp = Context.getService(PersonCountriesService.class).getPersonCountriesForPerson(personId);
 			if ((pp == null) || pp.isEmpty()) {

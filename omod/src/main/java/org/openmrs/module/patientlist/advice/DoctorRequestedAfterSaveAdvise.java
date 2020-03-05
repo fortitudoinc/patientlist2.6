@@ -10,13 +10,11 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.patientlist.DoctorRequestedByPatient;
 import org.springframework.aop.AfterReturningAdvice;
 
-/*
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.sns.AmazonSNSClient;
 import com.amazonaws.services.sns.model.CreateTopicRequest;
 import com.amazonaws.services.sns.model.CreateTopicResult;
-*/
 
 import java.util.Random;
 import org.apache.commons.codec.binary.Hex;
@@ -55,7 +53,7 @@ public class DoctorRequestedAfterSaveAdvise implements AfterReturningAdvice {
 		}
 		
 	}
-	/*
+	
 	private void sendAwsSms(String phoneNumber, String msg) {
 		System.out.println("Sending message to physician, Tel No.: " + phoneNumber);
 		
@@ -76,6 +74,5 @@ public class DoctorRequestedAfterSaveAdvise implements AfterReturningAdvice {
 		snsClient.deleteTopic(createTopicResult.getTopicArn());
 		
 	}
-	    */
 	
 }
