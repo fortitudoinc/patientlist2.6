@@ -128,7 +128,14 @@ FOR ENCOUNTER
 		<description>
 			comma separated list of countries where we work
 		</description>
-	</globalProperty>                              
+	</globalProperty>   
+        <globalProperty>
+		<property>patientlist.countrycodes</property>
+		<defaultValue>NIGERIA</defaultValue>
+		<description>
+			comma separated list of country/countrycode; e.g.NIGERIA/+234,UGANDA/+256
+		</description>
+	</globalProperty>                                      
 	<!-- AOP
 	<advice>
 		<point>org.openmrs.api.FormService</point>
