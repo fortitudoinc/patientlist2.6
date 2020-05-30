@@ -15,14 +15,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.openmrs.Patient;
 import org.openmrs.Person;
-import org.openmrs.PersonAddress;
 import org.openmrs.PersonAttribute;
-import org.openmrs.PersonAttributeType;
 import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.appframework.domain.Extension;
-import org.openmrs.module.appframework.service.AppFrameworkService;
 import org.openmrs.module.patientlist.DoctorRequestedByPatient;
 import org.openmrs.module.patientlist.PatientListItem;
 import org.openmrs.module.patientlist.PatientSpecialtyNeededItem;
@@ -33,7 +29,6 @@ import org.openmrs.module.patientlist.api.PatientListItemService;
 import org.openmrs.module.patientlist.api.PatientSpecialtyNeededItemService;
 import org.openmrs.module.patientlist.api.PersonCountriesService;
 import org.openmrs.module.patientlist.api.SpecialtyTypeItemService;
-import org.openmrs.module.patientlist.api.impl.PersonCountriesServiceImpl;
 import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.fragment.FragmentModel;
@@ -113,7 +108,7 @@ public class PatientListFragFragmentController {
 				}
 				patientCountry = getPersonCountry(oldPatientId);
 				if (isPatientCountryInDrCountries(patientCountry, userCountries)) {
-					oldPatientListItems.add(new PatientListItemLocal(item, 0, null, patientCountry));
+					oldPatientListItems.add(new PatientListItemLocal(item, 0, null, patientCountry, ""));
 				}
 			}
 			Collections.sort(oldPatientListItems, new Comparator<PatientListItemLocal>() {
@@ -156,6 +151,17 @@ public class PatientListFragFragmentController {
 			if (activePatient.getVoided()) {
 				continue;
 			}
+			String callOption;
+			PersonAttribute personCallAtt = activePatient.getAttribute("audioOrVideoCall");
+			if (personCallAtt == null) {
+				callOption = "audio";
+			} else {
+				callOption = activePatient.getAttribute("audioOrVideoCall").getValue();
+				if ((callOption == null) || (callOption.equals(""))) {
+					callOption = "audio";
+				}
+			}
+			
 			specId = getMostRecentSpecialtyForPatient(patientId);
 			//System.out.println("CONTROLLER...patiendId: " + patientId + " dr role: " + drRole + " item.getPatientCallDate: "
 			//        + item.getPatientCallDate());
@@ -169,7 +175,8 @@ public class PatientListFragFragmentController {
 			}
 			patientCountry = getPersonCountry(patientId);
 			if (isPatientCountryInDrCountries(patientCountry, userCountries)) {
-				activePatientListItems.add(new PatientListItemLocal(item, specId, doctorRequested, patientCountry));
+				activePatientListItems.add(new PatientListItemLocal(item, specId, doctorRequested, patientCountry,
+				        callOption));
 			}
 		}
 		
@@ -281,7 +288,7 @@ public class PatientListFragFragmentController {
 	String getPersonCountry(int personId) {
 		List<PersonCountries> pp = Context.getService(PersonCountriesService.class).getPersonCountriesForPerson(personId);
 		if ((pp == null) || pp.isEmpty()) {
-			return " ";
+			return "";
 		}
 		return pp.get(0).getCountries();
 	}
@@ -346,6 +353,8 @@ class PatientListItemLocal {
 	
 	String patientPhone, patientName;
 	
+	boolean whatsAppRequest = false;
+	
 	SpecialtyTypeItem specItem;
 	
 	User doctorRequested;
@@ -366,14 +375,27 @@ class PatientListItemLocal {
 		this.country = country;
 	}
 	
+	public boolean isWhatsAppRequest() {
+		return whatsAppRequest;
+	}
+	
+	public void setWhatsAppRequest(boolean whatsAppRequest) {
+		this.whatsAppRequest = whatsAppRequest;
+	}
+	
 	public PatientListItemLocal(org.openmrs.module.patientlist.PatientListItem item, int specId, User doctorRequested,
-	    String country) {
+	    String country, String callOption) {
 		//System.out.println("**********************Patient id: " + item.getPatientId() + " Spec id: " + specId
 		//        + " Dr Requested: " + doctorRequested);
 		if (specId == 0) {
 			specItem = null;
 		} else {
 			specItem = Context.getService(SpecialtyTypeItemService.class).getSpecialtyTypeItem(specId);
+		}
+		if ((callOption.equals("audio")) || (callOption.equals(""))) {
+			whatsAppRequest = false;
+		} else {
+			whatsAppRequest = true;
 		}
 		this.doctorRequested = doctorRequested;
 		this.country = country;
@@ -390,6 +412,11 @@ class PatientListItemLocal {
 		
 		try {
 			patientPhone = person.getAttribute("Telephone Number").getValue();
+			if (whatsAppRequest) {
+				if (patientPhone.startsWith("+")) {
+					patientPhone = patientPhone.substring(1);
+				}
+			}
 		}
 		catch (NullPointerException e) {
 			System.out.println("[PATIENTLIST] Null Pointer trying to fetch patient phone, filling in with empty string");

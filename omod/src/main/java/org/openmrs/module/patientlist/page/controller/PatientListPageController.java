@@ -1,18 +1,12 @@
 package org.openmrs.module.patientlist.page.controller;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.validation.constraints.Null;
 
 import org.openmrs.Patient;
 import org.openmrs.Person;
-import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
@@ -25,8 +19,6 @@ import org.openmrs.module.patientlist.api.PatientSpecialtyNeededItemService;
 import org.openmrs.module.patientlist.api.SpecialtyTypeItemService;
 import org.openmrs.module.uicommons.util.InfoErrorMessageUtil;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import org.openmrs.ui.framework.annotation.SpringBean;
 
 /**
  * @author levine

@@ -87,6 +87,9 @@ if (${numActive} > 0 ) {
 
 <div class="Table" id="patientMessageList">
 <h2>Active Patient List</h2>
+
+<!-- https://faq.whatsapp.com/en/android/26000030/?category=5245251</i><br><br> -->
+
 <table id="activeTable"  border="1" class="display" cellspacing="0" width="50%">
 <thead>
 <tr>
@@ -100,7 +103,7 @@ if (${numActive} > 0 ) {
 <th>Contact Attempts</th> 
 <th>Country</th>
 <th>Last Contact Attempt Date</th>
-<th>tel</th>
+<th>Mode of Consult</th>
 <th>Dashboard</th>
 <!--
 
@@ -153,7 +156,13 @@ if (${numActive} > 0 ) {
 <td>${ ui.format(it.contactAttempts)}</td>
 <td>${ ui.format(it.country)}</td>
 <td>${ ui.format(it.lastContactAttemptDate)}</td>
-<td>${ ui.format(it.patientPhone)}</td>
+<td>
+<% if ( it.whatsAppRequest) { %>
+<a href="https://wa.me/${it.patientPhone}">Video Consult</a>
+     <% } else { %>
+<a href="tel:${it.patientPhone}">Audio Consult</a>
+ <% } %>
+</td>
 <td>
         <a href=$url$it.patientId>dashboard</a>
 </td>

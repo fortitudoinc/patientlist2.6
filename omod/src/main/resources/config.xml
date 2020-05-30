@@ -121,7 +121,14 @@ FOR ENCOUNTER
 			we need the past medications form, copy uuid from
                     manage forms/history form
 		</description>
-	</globalProperty>     
+	</globalProperty>  
+       <globalProperty>
+		<property>patientlist.restBaseUrl</property>
+		<defaultValue></defaultValue>
+		<description>
+			provide Base URL for REST Calls: e.g. http://127.0.0.1:8081/openmrs/ws/rest/v1/	
+		</description>
+	</globalProperty>   
         <globalProperty>
 		<property>patientlist.countries</property>
 		<defaultValue>NIGERIA</defaultValue>

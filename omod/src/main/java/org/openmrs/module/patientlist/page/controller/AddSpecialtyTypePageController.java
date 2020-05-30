@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.appframework.domain.AppDescriptor;
-import org.openmrs.module.Extension;
 import org.openmrs.module.appframework.service.AppFrameworkService;
 import org.openmrs.module.patientlist.SpecialtyTypeItem;
 import org.openmrs.module.patientlist.api.SpecialtyTypeItemService;

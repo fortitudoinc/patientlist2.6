@@ -17,6 +17,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
 import org.openmrs.PersonAttribute;
 import org.openmrs.User;
+import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.patientlist.PatientListItem;
 import org.openmrs.module.patientlist.PatientSpecialtyNeededItem;
@@ -74,7 +75,7 @@ public class PatientAroundSaveAdvise extends StaticMethodMatcherPointcutAdvisor 
 				att.setValue(telNo);
 				patient.addAttribute(att);
 			}
-			*/
+			 */
 			System.out.println("AROUND******* telNo: " + patient.getAttribute("Telephone Number").getValue());
 			
 			if (isPatientAlreadyRegistered(patient)) {
@@ -83,6 +84,7 @@ public class PatientAroundSaveAdvise extends StaticMethodMatcherPointcutAdvisor 
 					System.out.println("PATIENT ADDING OLD PATIENT TO PATIENT LIST");
 					addPatientToActiveList(oldPatient);
 				}
+				addNewPatientCallModeAttribute(patient);
 				return oldPatient;
 			}
 			
@@ -96,6 +98,30 @@ public class PatientAroundSaveAdvise extends StaticMethodMatcherPointcutAdvisor 
 			//System.out.println("After " + invocation.getMethod().getName() + ".");
 			
 			return newPatient;
+		}
+		
+		private void addNewPatientCallModeAttribute(Patient patient) throws APIException {
+			System.out.println("\n\naddNewPatientCallModeAttribute\n\n");
+			String url = Context.getAdministrationService().getGlobalProperty("patientlist.restBaseUrl");
+			String patientUuid = oldPatient.getUuid();
+			url += "person/" + patientUuid;
+			RestPostGet restCall = new RestPostGet();
+			
+			String personAttributeTypeUuid = Context.getPersonService().getPersonAttributeTypeByName("audioOrVideoCall")
+			        .getUuid();
+			String action = "{\"attributeType\": {\"uuid\": \"PERSONATTRIBUTETYPEuuid\"}, \"value\": \"VALUE\"}";
+			action = "{  \"attributes\": [ { \"attributeType\": \"PERSONATTRIBUTETYPEuuid\",  \"value\": \"VALUE\"}  ]}";
+			PersonAttribute att = patient.getAttribute("audioOrVideoCall");
+			if (att == null) {
+				System.out.println("NEW PERSON ATTRIBUTE IS NULL\n");
+				return;
+			}
+			String attValue = att.getValue();
+			action = action.replace("PERSONATTRIBUTETYPEuuid", personAttributeTypeUuid);
+			action = action.replace("VALUE", attValue);
+			System.out.println("Action: " + action);
+			String jsonResponse = restCall.doPostRestCall(url, action);
+			System.out.println(jsonResponse);
 		}
 		
 		private boolean isEditingCurrentPatient(Patient patient) {
@@ -119,7 +145,8 @@ public class PatientAroundSaveAdvise extends StaticMethodMatcherPointcutAdvisor 
 			List<Patient> patients = Context.getPatientService().getAllPatients();
 			System.out.println("in method patientAlreadyRegistered: " + patient.getGivenName() + " "
 			        + patient.getFamilyName() + " " + patient.getGender() + " " + patient.getAge() + " "
-			        + patient.getAttribute("Telephone Number").getValue());
+			        + patient.getAttribute("Telephone Number").getValue()
+			        + patient.getAttribute("audioOrVideoCall").getValue());
 			for (Patient oldPat : patients) {
 				if ((oldPat.getGender().equals(patient.getGender()))
 				        && (oldPat.getAge() == patient.getAge())
@@ -149,7 +176,7 @@ public class PatientAroundSaveAdvise extends StaticMethodMatcherPointcutAdvisor 
 				patientListItem.setDrPersonId(user.getPerson().getPersonId());
 				System.out.println("DrPersonId: " + patientListItem.getDrPersonId());
 			} else { // if registering patient via mobile then there might not be an active user
-				     // so set the clerk/dr to super user - person id is 1
+				// so set the clerk/dr to super user - person id is 1
 				patientListItem.setClerkPersonId(1);
 				patientListItem.setDrPersonId(1);
 			}

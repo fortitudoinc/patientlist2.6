@@ -14,11 +14,11 @@ import org.openmrs.api.context.Context;
 import org.openmrs.ui.framework.page.PageModel;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.amazonaws.regions.Region;
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.sns.AmazonSNSClient;
-import com.amazonaws.services.sns.model.CreateTopicRequest;
-import com.amazonaws.services.sns.model.CreateTopicResult;
+//import com.amazonaws.regions.Region;
+//import com.amazonaws.regions.Regions;
+//import com.amazonaws.services.sns.AmazonSNSClient;
+//import com.amazonaws.services.sns.model.CreateTopicRequest;
+//import com.amazonaws.services.sns.model.CreateTopicResult;
 import java.util.Random;
 import org.apache.commons.codec.binary.Hex;
 
@@ -119,7 +119,7 @@ public class BroadcastMsgPageController {
 	}
 	
 	private void sendAwsSms(String phoneNumber, String msg) {
-		
+		/*
 		// Generate a random topic name to avoid collisions
 		byte[] b = new byte[20];
 		new Random().nextBytes(b);
@@ -135,6 +135,7 @@ public class BroadcastMsgPageController {
 		
 		// Cleanup
 		snsClient.deleteTopic(createTopicResult.getTopicArn());
+		*/
 		
 	}
 }
