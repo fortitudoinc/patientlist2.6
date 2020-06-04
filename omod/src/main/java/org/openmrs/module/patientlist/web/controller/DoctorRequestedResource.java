@@ -1,23 +1,12 @@
 package org.openmrs.module.patientlist.web.controller;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import org.openmrs.Patient;
 import org.openmrs.User;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.patientlist.DoctorRequestedByPatient;
 import org.openmrs.module.patientlist.DoctorRequestedShort;
-import org.openmrs.module.patientlist.PatientListItem;
-import org.openmrs.module.patientlist.PatientListItemShort;
-import org.openmrs.module.patientlist.PatientSpecialtyNeededItem;
-import org.openmrs.module.patientlist.PatientSpecialtyNeededShort;
-import org.openmrs.module.patientlist.SpecialtyTypeItem;
 import org.openmrs.module.patientlist.api.DoctorRequestedByPatientService;
-import org.openmrs.module.patientlist.api.PatientListItemService;
-import org.openmrs.module.patientlist.api.PatientSpecialtyNeededItemService;
-import org.openmrs.module.patientlist.api.SpecialtyTypeItemService;
-import org.openmrs.module.uicommons.util.InfoErrorMessageUtil;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.PropertyGetter;

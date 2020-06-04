@@ -50,9 +50,9 @@
             <point>org.openmrs.module.patientlist.api.DoctorRequestedByPatientService</point>
             <class>org.openmrs.module.patientlist.advice.DoctorRequestedAfterSaveAdvise</class>
         </advice>  
+ 
         
-              
-                          
+                                       
 	<advice>
             <point>org.openmrs.api.PatientService</point>
             <class>org.openmrs.module.patientlist.advice.PatientAroundSaveAdvise</class>
@@ -122,7 +122,7 @@ FOR ENCOUNTER
                     manage forms/history form
 		</description>
 	</globalProperty>  
-       <globalProperty>
+        <globalProperty>
 		<property>patientlist.restBaseUrl</property>
 		<defaultValue></defaultValue>
 		<description>
