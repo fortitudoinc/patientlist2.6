@@ -8,17 +8,17 @@ package org.openmrs.module.patientlist.page.controller;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.openmrs.Person;
 import org.openmrs.PersonAttribute;
 import org.openmrs.PersonAttributeType;
-import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.patientlist.PersonCountries;
-import org.openmrs.module.patientlist.api.PersonCountriesService;
+import org.openmrs.module.patientlist.Country;
+import org.openmrs.module.patientlist.PersonCountry;
+import org.openmrs.module.patientlist.api.CountryService;
+import org.openmrs.module.patientlist.api.PersonCountryService;
 import org.openmrs.ui.framework.page.PageModel;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -33,10 +33,7 @@ public class EnterPersonnelInfoPageController {
 		ArrayList<PersonnelAttributes> personnel = new ArrayList<PersonnelAttributes>();
 		PersonnelAttributes attributes;
 		int personId;
-		String countries;
-		String allCountries[];
-		countries = Context.getAdministrationService().getGlobalProperty("patientlist.countries");
-		allCountries = countries.split(",");
+		List<Country> allCountries = Context.getService(CountryService.class).getAllCountry();
 		PersonAttributeType attType = Context.getPersonService().getPersonAttributeTypeByName("Telephone Number");
 		for (User user : users) {
 			/*
@@ -56,15 +53,10 @@ public class EnterPersonnelInfoPageController {
 				continue;
 			}
 			personId = user.getPerson().getPersonId();
-			List<PersonCountries> pp = Context.getService(PersonCountriesService.class).getPersonCountriesForPerson(
-			    user.getPerson().getPersonId());
-			if ((pp == null) || (pp.size() == 0)) {
-				countries = " ";
-			} else {
-				countries = pp.get(0).getCountries();
-			}
+			List<PersonCountry> personCountries = Context.getService(PersonCountryService.class)
+			        .getAllPersonCountryForPerson(personId);
 			attributes = new PersonnelAttributes(user.getGivenName(), user.getFamilyName(), user.getPerson().getAttribute(
-			    attType), user.getUserId(), countries);
+			    attType), user.getUserId(), personCountries);
 			personnel.add(attributes);
 		}
 		model.addAttribute("personnel", personnel);
@@ -76,9 +68,9 @@ public class EnterPersonnelInfoPageController {
 	public String post(HttpSession session, HttpServletRequest request,
 	        @RequestParam(value = "userId", required = false) int userId,
 	        @RequestParam(value = "telNo", required = false) String telNo,
-	        @RequestParam(value = "personnelCountries", required = false) String personnelCountries) {
-		System.out.println("POST ------------ userId: " + userId + " telno: " + telNo + " personnelCountries: "
-		        + personnelCountries);
+	        @RequestParam(value = "personnelCountryIds", required = false) String personnelCountryIds) {
+		System.out.println("POST ------------ userId: " + userId + " telno: " + telNo + " personnelCountryIds: "
+		        + personnelCountryIds);
 		
 		User user = Context.getUserService().getUser(userId);
 		Person person = user.getPerson();
@@ -95,33 +87,57 @@ public class EnterPersonnelInfoPageController {
 			System.out.println("SAVED USER TELNO: " + user.getPerson().getAttribute(attType).getValue());
 		}
 		int personId = person.getPersonId();
-		PersonCountries p;
-		List<PersonCountries> pp = Context.getService(PersonCountriesService.class).getPersonCountriesForPerson(personId);
-		if ((pp == null) || (pp.size() == 0)) {
-			p = new PersonCountries();
-			p.setCountries(personnelCountries);
+		List<PersonCountry> pp = Context.getService(PersonCountryService.class).getAllPersonCountryForPerson(personId);
+		String newCountryIds = "," + personnelCountryIds + ",";
+		if (!((newCountryIds == null) || (newCountryIds.equals("")))) {
+			setNewPersonCountryList(personId, newCountryIds, pp);
+		}
+		return "redirect:" + "patientlist/enterPersonnelInfo.page";
+	}
+	
+	private void setNewPersonCountryList(int personId, String newCountryIds, List<PersonCountry> pp) {
+		System.out.println("\n\n\nsetNewPersonCountryList,personId: " + personId + " new ids: " + newCountryIds + " \n\n\n");
+		for (PersonCountry oldPersonCountry : pp) {
+			int oldCountryId = oldPersonCountry.getCountryId();
+			String oldCountryIdString = String.valueOf(oldCountryId);
+			if (newCountryIds.contains(oldCountryIdString)) {
+				newCountryIds = newCountryIds.replace(oldCountryIdString, "");
+				continue;
+			}
+			// old country is no longer in personnel list of countries so make it void
+			oldPersonCountry.setIsVoid(1);
+			Context.getService(PersonCountryService.class).savePersonCountry(oldPersonCountry);
+		}
+		if (!newCountryIds.matches(".*\\d.*")) {
+			return;
+		}
+		String[] newCountryIdsToAdd = newCountryIds.split(",");
+		System.out.println("\n\n\nsetNewPersonCountryList, newCountryIdsToAdd" + newCountryIds);
+		for (String newCountryIdToAdd : newCountryIdsToAdd) {
+			if (newCountryIdToAdd.equals("")) {
+				continue;
+			}
+			PersonCountry p = new PersonCountry();
+			p.setCountryId(Integer.valueOf(newCountryIdToAdd));
 			p.setDateCreated(new Date());
 			p.setPersonId(personId);
-		} else {
-			p = pp.get(0);
-			p.setCountries(personnelCountries);
-			p.setDateCreated(new Date());
+			Context.getService(PersonCountryService.class).savePersonCountry(p);
 		}
 		
-		Context.getService(PersonCountriesService.class).savePersonCountries(p);
-		
-		return "redirect:" + "patientlist/enterPersonnelInfo.page";
 	}
 	
 }
 
 class PersonnelAttributes {
 	
-	String givenName, familyName, telno, countries;
+	String givenName, familyName, telno;
 	
 	int userId;
 	
-	PersonnelAttributes(String givenName, String familyName, PersonAttribute telAtt, int userId, String countries) {
+	ArrayList<Integer> personCountriesIds = new ArrayList<Integer>();
+	
+	PersonnelAttributes(String givenName, String familyName, PersonAttribute telAtt, int userId,
+	    List<PersonCountry> personCountries) {
 		this.givenName = givenName;
 		this.familyName = familyName;
 		if (telAtt == null) {
@@ -130,7 +146,9 @@ class PersonnelAttributes {
 			telno = telAtt.getValue();
 		}
 		this.userId = userId;
-		this.countries = countries;
+		for (PersonCountry pc : personCountries) {
+			personCountriesIds.add(pc.getCountryId());
+		}
 	}
 	
 	public String getGivenName() {
@@ -165,12 +183,12 @@ class PersonnelAttributes {
 		this.userId = userId;
 	}
 	
-	public String getCountries() {
-		return countries;
+	public ArrayList<Integer> getPersonCountriesIds() {
+		return personCountriesIds;
 	}
 	
-	public void setCountries(String countries) {
-		this.countries = countries;
+	public void setPersonCountriesIds(ArrayList<Integer> personCountriesIds) {
+		this.personCountriesIds = personCountriesIds;
 	}
 	
 }

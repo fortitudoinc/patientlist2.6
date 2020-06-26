@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
@@ -19,15 +20,17 @@ import org.openmrs.PersonAttribute;
 import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.patientlist.Country;
 import org.openmrs.module.patientlist.DoctorRequestedByPatient;
 import org.openmrs.module.patientlist.PatientListItem;
 import org.openmrs.module.patientlist.PatientSpecialtyNeededItem;
-import org.openmrs.module.patientlist.PersonCountries;
+import org.openmrs.module.patientlist.PersonCountry;
 import org.openmrs.module.patientlist.SpecialtyTypeItem;
+import org.openmrs.module.patientlist.api.CountryService;
 import org.openmrs.module.patientlist.api.DoctorRequestedByPatientService;
 import org.openmrs.module.patientlist.api.PatientListItemService;
 import org.openmrs.module.patientlist.api.PatientSpecialtyNeededItemService;
-import org.openmrs.module.patientlist.api.PersonCountriesService;
+import org.openmrs.module.patientlist.api.PersonCountryService;
 import org.openmrs.module.patientlist.api.SpecialtyTypeItemService;
 import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.ui.framework.UiUtils;
@@ -58,10 +61,11 @@ public class PatientListFragFragmentController {
 		
 		User user = Context.getAuthenticatedUser();
 		Person person = user.getPerson();
-		PersonCountries p;
-		List<PersonCountries> pp = Context.getService(PersonCountriesService.class).getPersonCountriesForPerson(
+		List<Country> countries = Context.getService(CountryService.class).getAllCountry();
+		HashMap<Integer, String> countryMap = getCountryMap(countries);
+		List<PersonCountry> pp = Context.getService(PersonCountryService.class).getAllPersonCountryForPerson(
 		    person.getPersonId());
-		String userCountries = pp.get(0).getCountries();
+		String userCountries = getUserCountries(pp, countryMap);
 		/*
 		PersonAttributeType attType = Context.getPersonService().getPersonAttributeTypeByName("Country");
 		PersonAttribute p = new PersonAttribute();
@@ -106,7 +110,7 @@ public class PatientListFragFragmentController {
 				if (oldPatient.getVoided()) {
 					continue;
 				}
-				patientCountry = getPersonCountry(oldPatientId);
+				patientCountry = getPersonCountry(oldPatientId, countryMap);
 				if (isPatientCountryInDrCountries(patientCountry, userCountries)) {
 					oldPatientListItems.add(new PatientListItemLocal(item, 0, null, patientCountry, ""));
 				}
@@ -173,7 +177,7 @@ public class PatientListFragFragmentController {
 			} else {
 				System.out.println("*****************PatientListFragFragmentController, doctorRequested");
 			}
-			patientCountry = getPersonCountry(patientId);
+			patientCountry = getPersonCountry(patientId, countryMap);
 			if (isPatientCountryInDrCountries(patientCountry, userCountries)) {
 				activePatientListItems.add(new PatientListItemLocal(item, specId, doctorRequested, patientCountry,
 				        callOption));
@@ -281,16 +285,36 @@ public class PatientListFragFragmentController {
 		return nextRequest.getDoctorId();
 	}
 	
-	boolean isPatientCountryInDrCountries(String patientCountry, String userCountries) {
-		return userCountries.contains(patientCountry);
+	private HashMap<Integer, String> getCountryMap(List<Country> countries) {
+		HashMap<Integer, String> countryMap = new HashMap<Integer, String>();
+		for (Country country : countries) {
+			countryMap.put(country.getId(), country.getName());
+		}
+		return countryMap;
 	}
 	
-	String getPersonCountry(int personId) {
-		List<PersonCountries> pp = Context.getService(PersonCountriesService.class).getPersonCountriesForPerson(personId);
+	private String getUserCountries(List<PersonCountry> pp, HashMap<Integer, String> countryMap) {
+		String userCountries = "";
+		for (PersonCountry personCountry : pp) {
+			userCountries += "," + countryMap.get(personCountry.getCountryId());
+		}
+		return userCountries;
+	}
+	
+	boolean isPatientCountryInDrCountries(String patientCountry, String drCountries) {
+		System.out.println("\n\n\nisPatientCountryInDrCountries, patient: " + patientCountry + "  dr: " + drCountries
+		        + "\n\n\n");
+		return drCountries.contains(patientCountry);
+	}
+	
+	String getPersonCountry(int personId, HashMap<Integer, String> countryMap) {
+		List<PersonCountry> pp = Context.getService(PersonCountryService.class).getAllPersonCountryForPerson(personId);
 		if ((pp == null) || pp.isEmpty()) {
 			return "";
 		}
-		return pp.get(0).getCountries();
+		System.out.println("\n\ngetPersonCountry, personId: " + personId + "  pp.get(0).getCountryId(): "
+		        + pp.get(0).getCountryId() + "\n\n\n");
+		return countryMap.get(pp.get(0).getCountryId());
 	}
 	
 	public SimpleObject updateSpecialty(@RequestParam(value = "specId", required = false) String specId,

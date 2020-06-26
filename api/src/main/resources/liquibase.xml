@@ -96,5 +96,35 @@
             <column name="date_created" type="datetime"></column> 
         </createTable>        
     </changeSet>
- 
+    <changeSet id="levinemessage-9" author="levine">
+        <createTable tableName="country">
+            <column name="id" type="int(11)" autoIncrement="true"> 
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="country_code" type="varchar(255)">
+            </column>
+            <column name="name" type="varchar(255)"></column>
+            <column name="date_created" type="datetime"></column> 
+        </createTable>        
+    </changeSet>
+    <changeSet id="levinemessage-10" author="levine">
+        <createTable tableName="person_country">
+            <column name="id" type="int(11)" autoIncrement="true"> 
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="person_id" type="int">
+                <constraints nullable="false" foreignKeyName="personcountryperson_id1" references="person(person_id)"/>
+            </column>
+            <column name="country_id" type="int">
+                <constraints nullable="false" foreignKeyName="personcountrycountry_id1" references="country(id)"/>
+            </column>
+        </createTable>        
+    </changeSet>
+       <changeSet id="levinemessage-11" author="levine">
+            <addColumn tableName="person_country">
+               <column name="voided" type="tinyint(1)" defaultValue="0"></column>                       
+           </addColumn>
+    </changeSet>
+   
+
 </databaseChangeLog>

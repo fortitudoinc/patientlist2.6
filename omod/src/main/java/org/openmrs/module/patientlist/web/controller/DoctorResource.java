@@ -7,14 +7,19 @@ package org.openmrs.module.patientlist.web.controller;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.patientlist.Country;
 import org.openmrs.module.patientlist.DoctorItem;
 import org.openmrs.module.patientlist.PersonCountries;
+import org.openmrs.module.patientlist.PersonCountry;
+import org.openmrs.module.patientlist.api.CountryService;
 import org.openmrs.module.patientlist.api.PersonCountriesService;
+import org.openmrs.module.patientlist.api.PersonCountryService;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.PropertyGetter;
@@ -41,7 +46,11 @@ public class DoctorResource extends DataDelegatingCrudResource<DoctorItem> {
 		String drRole = Context.getAdministrationService().getGlobalProperty("patientlist.drrole");
 		Set<Role> userRoles;
 		String personCountries;
-		
+		HashMap<Integer, String> countryMap = new HashMap<Integer, String>();
+		List<Country> countries = Context.getService(CountryService.class).getAllCountry();
+		for (Country country : countries) {
+			countryMap.put(country.getId(), country.getName());
+		}
 		for (User user : users) {
 			userRoles = user.getAllRoles();
 			if (user.getRetired()) {
@@ -51,13 +60,22 @@ public class DoctorResource extends DataDelegatingCrudResource<DoctorItem> {
 				//System.out.println("user: " + user.getGivenName() + " " + user.getFamilyName() + " retired: "
 				//  + user.getRetired() + " role: " + role.getName());
 				if (role.getName().equalsIgnoreCase(drRole)) {
-					List<PersonCountries> pp = Context.getService(PersonCountriesService.class).getPersonCountriesForPerson(
+					List<PersonCountry> pp = Context.getService(PersonCountryService.class).getAllPersonCountryForPerson(
 					    user.getPerson().getPersonId());
+					//List<PersonCountries> pp = Context.getService(PersonCountriesService.class).getPersonCountriesForPerson(
+					//    user.getPerson().getPersonId());
 					if ((pp == null) || (pp.size() == 0)) {
 						personCountries = " ";
 						
 					} else {
-						personCountries = pp.get(0).getCountries();
+						personCountries = "";
+						//personCountries = pp.get(0).getCountries();
+						for (PersonCountry pc : pp) {
+							personCountries += "," + countryMap.get(pc.getCountryId());
+						}
+						if (personCountries.startsWith(",")) {
+							personCountries = personCountries.substring(1);
+						}
 						
 					}
 					DoctorItem drItem = new DoctorItem(user.getGivenName(), user.getFamilyName(), user.getUserId(),

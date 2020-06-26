@@ -7,12 +7,9 @@ package org.openmrs.module.patientlist.api.db.hibernate;
 
 import java.util.List;
 import org.hibernate.Criteria;
-import org.hibernate.criterion.Restrictions;
 import org.openmrs.api.APIException;
 import org.openmrs.api.db.hibernate.DbSessionFactory;
-import org.openmrs.module.patientlist.PatientSpecialtyNeededItem;
 import org.openmrs.module.patientlist.SpecialtyTypeItem;
-import org.openmrs.module.patientlist.api.db.PatientSpecialtyNeededItemDao;
 import org.openmrs.module.patientlist.api.db.SpecialtyTypeItemDao;
 
 /**

@@ -7,16 +7,16 @@ package org.openmrs.module.patientlist.api.db;
 
 import java.util.List;
 import org.openmrs.api.APIException;
-import org.openmrs.module.patientlist.SpecialtyTypeItem;
+import org.openmrs.module.patientlist.Country;
 
 /**
  * @author levine
  */
-public interface SpecialtyTypeItemDao {
+public interface CountryDao {
 	
-	public SpecialtyTypeItem saveSpecialtyTypeItem(SpecialtyTypeItem item) throws APIException;
+	Country saveCountry(Country item) throws APIException;
 	
-	public SpecialtyTypeItem getSpecialtyTypeItem(Integer id);
+	public Country getCountry(Integer id);
 	
-	public List<SpecialtyTypeItem> getAllSpecialtyTypeItem();
+	public List<Country> getAllCountry();
 }

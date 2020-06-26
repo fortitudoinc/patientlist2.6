@@ -4,13 +4,19 @@ package org.openmrs.module.patientlist.web.controller;
  *
  * @author levine
  */
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import org.openmrs.Person;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.patientlist.Country;
 import org.openmrs.module.patientlist.PersonCountries;
 import org.openmrs.module.patientlist.PersonCountriesShort;
+import org.openmrs.module.patientlist.PersonCountry;
+import org.openmrs.module.patientlist.api.CountryService;
 import org.openmrs.module.patientlist.api.PersonCountriesService;
+import org.openmrs.module.patientlist.api.PersonCountryService;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.PropertyGetter;
@@ -86,23 +92,62 @@ public class PersonCountriesResource extends DataDelegatingCrudResource<PersonCo
 	
 	@Override
 	public PersonCountriesShort save(PersonCountriesShort t) {
-		System.out.println("****************SAVE: " + t.getPersonUUID() + " countries: " + t.getCountries());
+		HashMap<String, Integer> countryMap = new HashMap<String, Integer>();
+		List<Country> countries = Context.getService(CountryService.class).getAllCountry();
+		for (Country country : countries) {
+			countryMap.put(country.getName(), country.getId());
+		}
+		String newCountries = t.getCountries();
+		ArrayList<Integer> newCountryIds = getNewCountryIds(newCountries, countryMap);
+		
+		System.out.println("****************SAVE: " + t.getPersonUUID() + " countries: " + newCountries);
 		Person person = Context.getPersonService().getPersonByUuid(t.getPersonUUID());
 		PersonCountries personCountries;
 		int personId = person.getPersonId();
-		List<PersonCountries> pp = Context.getService(PersonCountriesService.class).getPersonCountriesForPerson(personId);
-		if ((pp == null) || (pp.size() == 0)) {
-			personCountries = new PersonCountries();
-			personCountries.setCountries(t.getCountries());
-			personCountries.setDateCreated(new Date());
-			personCountries.setPersonId(personId);
-		} else {
-			personCountries = pp.get(0);
-			personCountries.setCountries(t.getCountries());
-			personCountries.setDateCreated(new Date());
-		}
-		Context.getService(PersonCountriesService.class).savePersonCountries(personCountries);
+		List<PersonCountry> pp = Context.getService(PersonCountryService.class).getAllPersonCountryForPerson(personId);
+		
+		setNewPersonCountryList(personId, newCountryIds, pp);
 		return t;
+	}
+	
+	private ArrayList<Integer> getNewCountryIds(String newCountries, HashMap<String, Integer> countryMap) {
+		ArrayList<Integer> newCountryIds = new ArrayList<Integer>();
+		String[] newCountryNames = newCountries.split(",");
+		for (String countryName : newCountryNames) {
+			if (countryName.trim().equals("")) {
+				continue;
+			}
+			newCountryIds.add(countryMap.get(countryName.trim()));
+		}
+		return newCountryIds;
+	}
+	
+	private void setNewPersonCountryList(int personId, ArrayList<Integer> newCountryIds, List<PersonCountry> pp) {
+		System.out.println("\n\n\nsetNewPersonCountryList,personId: " + personId + " new ids: " + newCountryIds + " \n\n\n");
+		for (PersonCountry oldPersonCountry : pp) {
+			int i;
+			int oldCountryId = oldPersonCountry.getCountryId();
+			if ((i = newCountryIds.indexOf(oldCountryId)) >= 0) {
+				newCountryIds.remove(i);
+				continue;
+			}
+			// old country is no longer in personnel list of countries so make it void
+			oldPersonCountry.setIsVoid(1);
+			Context.getService(PersonCountryService.class).savePersonCountry(oldPersonCountry);
+		}
+		if (newCountryIds.size() == 0) {
+			return;
+		}
+		//remaining newCountryIds need to be added
+		System.out.println("\n\n\nsetNewPersonCountryList, newCountryIdsToAdd" + newCountryIds);
+		for (Integer newCountryIdToAdd : newCountryIds) {
+			PersonCountry p = new PersonCountry();
+			p.setCountryId(newCountryIdToAdd);
+			p.setDateCreated(new Date());
+			p.setPersonId(personId);
+			Context.getService(PersonCountryService.class).savePersonCountry(p);
+		}
+		
 	}
 	
 	@PropertyGetter("display")

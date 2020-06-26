@@ -83,8 +83,16 @@
                 "url": "patientlist/broadcastMsg.page",
                 "icon": "icon-signin",
                 "requiredPrivilege": "App: broadcast message"
+            },
+            {
+                "id": "${project.parent.artifactId}.addCountryInfo",
+                "extensionPointId": "org.openmrs.referenceapplication.homepageLink",
+                "type": "link",
+                "label": "Add New Countries",
+                "url": "patientlist/addCountryInfo.page",
+                "icon": "icon-signin",
+                "requiredPrivilege": "App: patient list"
             }
-
         ]
     }
 ]

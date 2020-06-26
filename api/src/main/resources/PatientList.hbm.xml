@@ -50,5 +50,24 @@
         <property column="person_id" name="personId" not-null="true"/>
         <property column="countries" name="countries" not-null="true"/>
         <property column="date_created" name="dateCreated" not-null="true" type="java.util.Date"/>
+    </class>  
+        <class name="Country" table="country">
+        <id column="id" name="id" type="int" unsaved-value="0">
+            <generator class="native"/>
+        </id>
+        <discriminator column="id" insert="false"/>
+        <property column="country_code" name="countryCode" not-null="true"/>
+        <property column="name" name="name" not-null="true"/>
+        <property column="date_created" name="dateCreated" not-null="true" type="java.util.Date"/>
+    </class>   
+    <class name="PersonCountry" table="person_country">
+        <id column="id" name="id" type="int" unsaved-value="0">
+            <generator class="native"/>
+        </id>
+        <discriminator column="id" insert="false"/>
+        <property column="person_id" name="personId" not-null="true"/>
+        <property column="country_id" name="countryId" not-null="true"/>
+        <property column="voided" name="isVoid" not-null="true"/>
+
     </class>   
 </hibernate-mapping>

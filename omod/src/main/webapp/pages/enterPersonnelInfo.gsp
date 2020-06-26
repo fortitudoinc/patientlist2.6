@@ -24,6 +24,7 @@ ui.includeCss("uicommons", "datatables/dataTables_jui.css")
 var countries;
 
     function selectPersonnel(userIdTelno) {
+                //userIdTelno is personel.userId/personel.telno/personel.personCountriesIds
             var p = userIdTelno.split("/");
             document.getElementById('userId').value = p[0];
             document.getElementById('currentTelNo').value = p[1];
@@ -34,32 +35,35 @@ var countries;
                 }
             });
    }
-    function countryInUserList(country, personnelCountries) {
-        if (personnelCountries.includes(country)) {
+    function countryInUserList(countryId, personCountriesIds) {
+        var idp = personCountriesIds.replace("[",",");
+        idp = idp.replace("]",",");
+        idp = idp.replace(/ /g, "");
+        if (idp.includes("," + countryId + ",") ) {
             return true;
-            }
+        }
         return false;
-    }
+}
  
-    function getCountriesForUser() {
-            var userCountries = "";
+    function getCountryIdsForUser() {
+            var userCountryIds = "";
             jq.each(jq("input[name='country_check']:checked"), function(){
-                if (userCountries == "") {
-                    userCountries = jq(this).val();
+                if (userCountryIds == "") {
+                    userCountryIds = jq(this).val();
                     } else {
-                    userCountries = userCountries + "," + jq(this).val();
+                    userCountryIds = userCountryIds + "," + jq(this).val();
                     }
             });
-            document.getElementById('personnelCountries').value = userCountries;
-            return userCountries;
+            document.getElementById('personnelCountryIds').value = userCountryIds;
+            return userCountryIds;
     }
 
 function isValidSubmit() {
-    var countries = getCountriesForUser();
+    var userCountryIds = getCountryIdsForUser();
     if ( (document.getElementById('userId').value == 0) ||
          ( (document.getElementById('telNo').value == 0) &&
             (document.getElementById('currentTelNo') == "") ) ||
-         (countries == "") ) {
+         (userCountryIds == "") ) {
              alert("Please select user and provide telephone number and country(ies)");
              return false;
          } else {
@@ -67,7 +71,6 @@ function isValidSubmit() {
          }
 }
 </script>
-
 <div>
 <form method="post">
 
@@ -78,7 +81,7 @@ function isValidSubmit() {
    <select onchange="selectPersonnel(this.value)">
    <option value="0">Select Personnel</option>
     <% personnel.each { personel->%>
-     <option value="${personel.userId}/${personel.telno}/${personel.countries}">${personel.givenName + " " + personel.familyName} </option>
+     <option value="${personel.userId}/${personel.telno}/${personel.personCountriesIds}">${personel.givenName + " " + personel.familyName} </option>
      <% } %>
     </select>
      <% } %>
@@ -96,10 +99,10 @@ Add/Update Personnel Phone Number (include country code; e.g. +25408145663444): 
 <br><br>
 Select Countries Where Assisting<br><br>
 <% allCountries.each { country->%>
-    <input type="checkbox" name="country_check" value="${country}">${country}<br>  
+    <input type="checkbox" name="country_check" value="${country.id}">${country.name}<br>  
 <% } %>
 
-<input id="personnelCountries" type="hidden" name="personnelCountries" value="0">
+<input id="personnelCountryIds" type="hidden" name="personnelCountryIds" value="0">
 
 
 <input type="submit" value="Submit" onclick='return isValidSubmit();'>
