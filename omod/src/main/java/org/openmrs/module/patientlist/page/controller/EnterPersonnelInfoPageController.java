@@ -6,6 +6,8 @@
 package org.openmrs.module.patientlist.page.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -34,6 +36,13 @@ public class EnterPersonnelInfoPageController {
 		PersonnelAttributes attributes;
 		int personId;
 		List<Country> allCountries = Context.getService(CountryService.class).getAllCountry();
+		Collections.sort(allCountries, new Comparator<Country>() {
+			
+			@Override
+			public int compare(Country lhs, Country rhs) {
+				return lhs.getName().compareTo(rhs.getName());
+			}
+		});
 		PersonAttributeType attType = Context.getPersonService().getPersonAttributeTypeByName("Telephone Number");
 		for (User user : users) {
 			/*
@@ -97,11 +106,14 @@ public class EnterPersonnelInfoPageController {
 	
 	private void setNewPersonCountryList(int personId, String newCountryIds, List<PersonCountry> pp) {
 		System.out.println("\n\n\nsetNewPersonCountryList,personId: " + personId + " new ids: " + newCountryIds + " \n\n\n");
+		newCountryIds = "," + newCountryIds + ",";
 		for (PersonCountry oldPersonCountry : pp) {
+			
 			int oldCountryId = oldPersonCountry.getCountryId();
 			String oldCountryIdString = String.valueOf(oldCountryId);
-			if (newCountryIds.contains(oldCountryIdString)) {
-				newCountryIds = newCountryIds.replace(oldCountryIdString, "");
+			System.out.println("newIds: " + newCountryIds + " oldId: " + oldCountryIdString);
+			if (newCountryIds.contains("," + oldCountryIdString + ",")) {
+				newCountryIds = newCountryIds.replace("," + oldCountryIdString + ",", ",");
 				continue;
 			}
 			// old country is no longer in personnel list of countries so make it void

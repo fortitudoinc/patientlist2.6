@@ -1,5 +1,7 @@
 package org.openmrs.module.patientlist.page.controller;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +39,13 @@ public class AddCountryInfoPageController {
 		List<Country> countries;
 		countries = Context.getService(CountryService.class).getAllCountry();
 		//movePersonCountriesToPersonCountry(countries);
+		Collections.sort(countries, new Comparator<Country>() {
+			
+			@Override
+			public int compare(Country lhs, Country rhs) {
+				return lhs.getName().compareTo(rhs.getName());
+			}
+		});
 		model.addAttribute("countries", countries);
 		
 	}

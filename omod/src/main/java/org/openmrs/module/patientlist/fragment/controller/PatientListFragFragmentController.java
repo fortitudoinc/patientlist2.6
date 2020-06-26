@@ -377,7 +377,7 @@ class PatientListItemLocal {
 	
 	String patientPhone, patientName;
 	
-	boolean whatsAppRequest = false;
+	String callOption = "";
 	
 	SpecialtyTypeItem specItem;
 	
@@ -399,12 +399,12 @@ class PatientListItemLocal {
 		this.country = country;
 	}
 	
-	public boolean isWhatsAppRequest() {
-		return whatsAppRequest;
+	public String getCallOption() {
+		return callOption;
 	}
 	
-	public void setWhatsAppRequest(boolean whatsAppRequest) {
-		this.whatsAppRequest = whatsAppRequest;
+	public void setCallOption(String callOption) {
+		this.callOption = callOption;
 	}
 	
 	public PatientListItemLocal(org.openmrs.module.patientlist.PatientListItem item, int specId, User doctorRequested,
@@ -416,11 +416,7 @@ class PatientListItemLocal {
 		} else {
 			specItem = Context.getService(SpecialtyTypeItemService.class).getSpecialtyTypeItem(specId);
 		}
-		if ((callOption.equals("audio")) || (callOption.equals(""))) {
-			whatsAppRequest = false;
-		} else {
-			whatsAppRequest = true;
-		}
+		this.callOption = callOption;
 		this.doctorRequested = doctorRequested;
 		this.country = country;
 		id = item.getId();
@@ -436,7 +432,7 @@ class PatientListItemLocal {
 		
 		try {
 			patientPhone = person.getAttribute("Telephone Number").getValue();
-			if (whatsAppRequest) {
+			if (!callOption.equals("audio")) {   // whatsapp does not want the "+" to start a telno
 				if (patientPhone.startsWith("+")) {
 					patientPhone = patientPhone.substring(1);
 				}
