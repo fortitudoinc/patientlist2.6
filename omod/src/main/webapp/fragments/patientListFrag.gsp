@@ -157,9 +157,11 @@ if (${numActive} > 0 ) {
 <td>${ ui.format(it.country)}</td>
 <td>${ ui.format(it.lastContactAttemptDate)}</td>
 <td>
-<% if ( it.whatsAppRequest) { %>
+<% if ( it.callOption.equals("video")) { %>
 <a href="https://wa.me/${it.patientPhone}">Video Consult</a>
-     <% } else { %>
+     <% } else if (it.callOption.equals("text")) { %>
+<a href="https://wa.me/${it.patientPhone}">Text Consult</a>
+<% } else { %>
 <a href="tel:${it.patientPhone}">Audio Consult</a>
  <% } %>
 </td>

@@ -432,7 +432,7 @@ class PatientListItemLocal {
 		
 		try {
 			patientPhone = person.getAttribute("Telephone Number").getValue();
-			if (!callOption.equals("audio")) {   // whatsapp does not want the "+" to start a telno
+			if (!callOption.equals("audio")) { // whatsapp does not want the "+" to start a telno
 				if (patientPhone.startsWith("+")) {
 					patientPhone = patientPhone.substring(1);
 				}

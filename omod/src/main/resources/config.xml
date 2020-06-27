@@ -50,7 +50,7 @@
             <point>org.openmrs.module.patientlist.api.DoctorRequestedByPatientService</point>
             <class>org.openmrs.module.patientlist.advice.DoctorRequestedAfterSaveAdvise</class>
         </advice>  
-                   
+ 
         
                                        
 	<advice>
@@ -76,7 +76,7 @@ FOR ENCOUNTER
             <point>org.openmrs.api.EncounterService</point>
             <class>org.openmrs.module.patientlist.advice.SendSMSLabsDrugsAdvice</class>
         </advice>   
-
+ 
         <globalProperty>
 		<property>patientlist.clerkrole</property>
 		<defaultValue></defaultValue>
