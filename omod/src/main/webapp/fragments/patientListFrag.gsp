@@ -30,7 +30,10 @@ if (${numActive} > 0 ) {
         if ("$role" === "dr") {
             document.getElementById("oldPatientMessageList").style.display = "none";
         }
+
+ 
 });
+
 </script>
 
 <script>
@@ -81,7 +84,26 @@ if (${numActive} > 0 ) {
         })   
     };
 
+
+    function notifyPatient(patientListId, patientPhoneNum) {
+       jq.getJSON('${ ui.actionLink("notifyPatientBadWhatsApp") }',
+            {
+              'patientListId':    patientListId,
+              'patientPhoneNum': patientPhoneNum,
+            })
+        .success(function(data) {
+            location.reload();
+        })
+        .error(function(xhr, status, err) {
+            alert('AJAX error ' + err);
+        })
+};
+
 </script>
+
+<style>
+button.link { background:none;border:none; }
+</style>
 
 <div>
 
@@ -102,9 +124,9 @@ if (${numActive} > 0 ) {
 <th>Patient Name</th>
 <th>Contact Attempts</th> 
 <th>Country</th>
-<th>Last Contact Attempt Date</th>
 <th>Mode of Consult</th>
 <th>Dashboard</th>
+<th>Inactive WhatsApp</th>
 <!--
 
         <% if (role.equals("dr")) { %>
@@ -155,15 +177,16 @@ if (${numActive} > 0 ) {
 <td>${ ui.format(it.patientName)}</td>
 <td>${ ui.format(it.contactAttempts)}</td>
 <td>${ ui.format(it.country)}</td>
-<td>${ ui.format(it.lastContactAttemptDate)}</td>
 <td>
 <% if ( it.callOption.equals("video")) { %>
-<a href="https://wa.me/${it.patientPhone}">Video Consult</a>
-     <% } else if (it.callOption.equals("text")) { %>
-<a href="https://wa.me/${it.patientPhone}">Text Consult</a>
+            <a href="https://wa.me/${it.patientPhone}">Video Consult</a>
+<% } else if (it.callOption.equals("text")) { %>
+            <a href="https://wa.me/${it.patientPhone}">Text Consult</a>
+<% } else if (it.country.equals("NIGERIA") && isUserInNigeria){ %>
+        <a href="tel:${it.patientPhone}">Audio Consult</a>
 <% } else { %>
-<a href="tel:${it.patientPhone}">Audio Consult</a>
- <% } %>
+    <a href="https://wa.me/${it.patientPhone}">Audio Consult</a>
+<% } %>
 </td>
 <td>
         <a href=$url$it.patientId>dashboard</a>
@@ -175,6 +198,9 @@ if (${numActive} > 0 ) {
 </td>
     <% } %>
 -->
+<td> 
+<button onclick="notifyPatient(${it.id}, ${it.patientPhone})">Notify Patient</button>
+</td>
 </tr>
     <% } %>
   <% } else { %>
